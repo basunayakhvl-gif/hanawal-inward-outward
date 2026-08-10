@@ -1,0 +1,485 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Search Register - Hanawal Gram Panchayat</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7f4;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2e7d32;
+      color: white;
+      padding: 16px 20px;
+    }
+
+    header h1 {
+      font-size: 20px;
+    }
+
+    header p {
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .top h2 {
+      color: #333;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #555;
+      color: white;
+      padding: 9px 14px;
+      border-radius: 7px;
+      font-size: 14px;
+    }
+
+    .search-box {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #2e7d32;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 11px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .search-btn {
+      background: #2e7d32;
+      color: white;
+    }
+
+    .clear-btn {
+      background: #777;
+      color: white;
+    }
+
+    .table-box {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: #2e7d32;
+      color: white;
+    }
+
+    .inward {
+      color: #1565c0;
+      font-weight: bold;
+    }
+
+    .outward {
+      color: #ef6c00;
+      font-weight: bold;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    .count {
+      margin-bottom: 12px;
+      color: #555;
+      font-weight: bold;
+    }
+
+    @media (max-width: 700px) {
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .top {
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Hanawal Gram Panchayat</h1>
+    <p>Inward &amp; Outward Register</p>
+  </header>
+
+  <div class="container">
+
+    <div class="top">
+      <h2>🔎 Search Register</h2>
+
+      <a href="dashboard.html" class="back-btn">
+        ← Dashboard
+      </a>
+    </div>
+
+    <div class="search-box">
+
+      <div class="filters">
+
+        <div>
+          <label>Register Type</label>
+
+          <select id="type">
+            <option value="all">All</option>
+            <option value="inward">Inward</option>
+            <option value="outward">Outward</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Search Number</label>
+
+          <input
+            type="text"
+            id="number"
+            placeholder="IN-001 / OUT-001"
+          >
+        </div>
+
+        <div>
+          <label>Search Name / Office</label>
+
+          <input
+            type="text"
+            id="name"
+            placeholder="From / To"
+          >
+        </div>
+
+        <div>
+          <label>From Date</label>
+
+          <input type="date" id="fromDate">
+        </div>
+
+        <div>
+          <label>To Date</label>
+
+          <input type="date" id="toDate">
+        </div>
+
+        <div>
+          <label>Subject</label>
+
+          <input
+            type="text"
+            id="subject"
+            placeholder="Search subject"
+          >
+        </div>
+
+      </div>
+
+      <div class="buttons">
+
+        <button class="search-btn" onclick="searchRegister()">
+          🔎 Search
+        </button>
+
+        <button class="clear-btn" onclick="clearSearch()">
+          Clear
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="count" id="resultCount">
+      Showing 0 records
+    </div>
+
+    <div class="table-box">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Number</th>
+            <th>Date</th>
+            <th>From / To</th>
+            <th>Letter No</th>
+            <th>Subject</th>
+            <th>Person</th>
+          </tr>
+        </thead>
+
+        <tbody id="results">
+
+          <tr>
+            <td colspan="7" class="no-data">
+              No records found
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    // Login protection
+    if (localStorage.getItem("loggedIn") !== "true") {
+      window.location.href = "index.html";
+    }
+
+    /*
+      Search system structure.
+
+      Later, when the real database is connected,
+      this section will automatically load all
+      Inward and Outward records.
+    */
+
+    let records = JSON.parse(
+      localStorage.getItem("registerRecords") || "[]"
+    );
+
+
+    function searchRegister() {
+
+      const type =
+        document.getElementById("type").value;
+
+      const number =
+        document.getElementById("number").value
+        .trim()
+        .toLowerCase();
+
+      const name =
+        document.getElementById("name").value
+        .trim()
+        .toLowerCase();
+
+      const fromDate =
+        document.getElementById("fromDate").value;
+
+      const toDate =
+        document.getElementById("toDate").value;
+
+      const subject =
+        document.getElementById("subject").value
+        .trim()
+        .toLowerCase();
+
+
+      const filtered = records.filter(function(record) {
+
+        if (type !== "all" && record.type !== type) {
+          return false;
+        }
+
+        if (
+          number &&
+          !record.number.toLowerCase().includes(number)
+        ) {
+          return false;
+        }
+
+        if (
+          name &&
+          !record.name.toLowerCase().includes(name)
+        ) {
+          return false;
+        }
+
+        if (
+          fromDate &&
+          record.date < fromDate
+        ) {
+          return false;
+        }
+
+        if (
+          toDate &&
+          record.date > toDate
+        ) {
+          return false;
+        }
+
+        if (
+          subject &&
+          !record.subject.toLowerCase().includes(subject)
+        ) {
+          return false;
+        }
+
+        return true;
+
+      });
+
+
+      displayResults(filtered);
+
+    }
+
+
+    function displayResults(data) {
+
+      const results =
+        document.getElementById("results");
+
+      results.innerHTML = "";
+
+      document.getElementById("resultCount").textContent =
+        "Showing " + data.length + " records";
+
+
+      if (data.length === 0) {
+
+        results.innerHTML = `
+          <tr>
+            <td colspan="7" class="no-data">
+              No records found
+            </td>
+          </tr>
+        `;
+
+        return;
+      }
+
+
+      data.forEach(function(record) {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td class="${record.type}">
+            ${record.type.toUpperCase()}
+          </td>
+
+          <td>${record.number}</td>
+
+          <td>${record.date}</td>
+
+          <td>${record.name}</td>
+
+          <td>${record.letterNo || "-"}</td>
+
+          <td>${record.subject}</td>
+
+          <td>${record.person || "-"}</td>
+        `;
+
+        results.appendChild(row);
+
+      });
+
+    }
+
+
+    function clearSearch() {
+
+      document.getElementById("type").value = "all";
+
+      document.getElementById("number").value = "";
+
+      document.getElementById("name").value = "";
+
+      document.getElementById("fromDate").value = "";
+
+      document.getElementById("toDate").value = "";
+
+      document.getElementById("subject").value = "";
+
+      displayResults([]);
+
+    }
+
+  </script>
+
+</body>
+</html>
+```
