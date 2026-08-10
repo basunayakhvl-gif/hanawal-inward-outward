@@ -1,0 +1,264 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Dashboard - Hanawal Gram Panchayat</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7f4;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2e7d32;
+      color: white;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 20px;
+    }
+
+    header p {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .logout-btn {
+      background: white;
+      color: #2e7d32;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 7px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 25px 18px;
+    }
+
+    .welcome {
+      margin-bottom: 22px;
+    }
+
+    .welcome h2 {
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .welcome p {
+      color: #666;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .card h3 {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .number {
+      font-size: 32px;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      background: white;
+      padding: 22px 15px;
+      border-radius: 14px;
+      text-align: center;
+      color: #333;
+      font-weight: bold;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      transition: 0.2s;
+    }
+
+    .menu a:hover {
+      transform: translateY(-2px);
+    }
+
+    .icon {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .inward {
+      color: #1565c0;
+    }
+
+    .outward {
+      color: #ef6c00;
+    }
+
+    .search {
+      color: #6a1b9a;
+    }
+
+    .reports {
+      color: #00838f;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #777;
+      font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .cards,
+      .menu {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div>
+      <h1>Hanawal Gram Panchayat</h1>
+      <p>Inward &amp; Outward Register</p>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">
+      Logout
+    </button>
+  </header>
+
+  <main class="container">
+
+    <div class="welcome">
+      <h2>Dashboard</h2>
+      <p>Welcome to Inward &amp; Outward Register</p>
+    </div>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>Total Inward</h3>
+        <div class="number" id="totalInward">0</div>
+      </div>
+
+      <div class="card">
+        <h3>Total Outward</h3>
+        <div class="number" id="totalOutward">0</div>
+      </div>
+
+      <div class="card">
+        <h3>Today's Inward</h3>
+        <div class="number" id="todayInward">0</div>
+      </div>
+
+      <div class="card">
+        <h3>Today's Outward</h3>
+        <div class="number" id="todayOutward">0</div>
+      </div>
+
+    </div>
+
+    <div class="menu">
+
+      <a href="inward.html">
+        <span class="icon inward">📥</span>
+        New Inward
+      </a>
+
+      <a href="outward.html">
+        <span class="icon outward">📤</span>
+        New Outward
+      </a>
+
+      <a href="search.html">
+        <span class="icon search">🔎</span>
+        Search Register
+      </a>
+
+      <a href="reports.html">
+        <span class="icon reports">📊</span>
+        Reports
+      </a>
+
+    </div>
+
+  </main>
+
+  <footer>
+    Hanawal Gram Panchayat © 2026
+  </footer>
+
+  <script>
+
+    // Check login
+    if (localStorage.getItem("loggedIn") !== "true") {
+      window.location.href = "index.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "index.html";
+    }
+
+    // Temporary counters
+    document.getElementById("totalInward").textContent =
+      localStorage.getItem("totalInward") || "0";
+
+    document.getElementById("totalOutward").textContent =
+      localStorage.getItem("totalOutward") || "0";
+
+    document.getElementById("todayInward").textContent =
+      localStorage.getItem("todayInward") || "0";
+
+    document.getElementById("todayOutward").textContent =
+      localStorage.getItem("todayOutward") || "0";
+
+  </script>
+
+</body>
+</html>
+```
