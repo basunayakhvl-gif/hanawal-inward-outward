@@ -46,6 +46,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 18px;
+      gap: 10px;
     }
 
     .top h2 {
@@ -132,7 +133,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 850px;
+      min-width: 950px;
     }
 
     th,
@@ -146,6 +147,7 @@
     th {
       background: #2e7d32;
       color: white;
+      white-space: nowrap;
     }
 
     .inward {
@@ -170,6 +172,31 @@
       font-weight: bold;
     }
 
+    .action-btn {
+      background: #1976d2;
+      color: white;
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+
+    .delete-btn {
+      background: #c62828;
+      color: white;
+      padding: 7px 10px;
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    .empty-message {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      color: #666;
+      text-align: center;
+      display: none;
+    }
+
     @media (max-width: 700px) {
       .filters {
         grid-template-columns: 1fr;
@@ -177,7 +204,6 @@
 
       .top {
         align-items: flex-start;
-        gap: 10px;
       }
     }
   </style>
@@ -185,300 +211,484 @@
 
 <body>
 
-  <header>
-    <h1>Hanawal Gram Panchayat</h1>
-    <p>Inward &amp; Outward Register</p>
-  </header>
+<header>
+  <h1>Hanawal Gram Panchayat</h1>
+  <p>Inward &amp; Outward Register</p>
+</header>
 
-  <div class="container">
+<div class="container">
 
-    <div class="top">
-      <h2>🔎 Search Register</h2>
+  <div class="top">
+    <h2>🔎 Search Register</h2>
 
-      <a href="dashboard.html" class="back-btn">
-        ← Dashboard
-      </a>
-    </div>
+    <a href="dashboard.html" class="back-btn">
+      ← Dashboard
+    </a>
+  </div>
 
-    <div class="search-box">
+  <div class="search-box">
 
-      <div class="filters">
+    <div class="filters">
 
-        <div>
-          <label>Register Type</label>
+      <div>
+        <label>Register Type</label>
 
-          <select id="type">
-            <option value="all">All</option>
-            <option value="inward">Inward</option>
-            <option value="outward">Outward</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Search Number</label>
-
-          <input
-            type="text"
-            id="number"
-            placeholder="IN-001 / OUT-001"
-          >
-        </div>
-
-        <div>
-          <label>Search Name / Office</label>
-
-          <input
-            type="text"
-            id="name"
-            placeholder="From / To"
-          >
-        </div>
-
-        <div>
-          <label>From Date</label>
-
-          <input type="date" id="fromDate">
-        </div>
-
-        <div>
-          <label>To Date</label>
-
-          <input type="date" id="toDate">
-        </div>
-
-        <div>
-          <label>Subject</label>
-
-          <input
-            type="text"
-            id="subject"
-            placeholder="Search subject"
-          >
-        </div>
-
+        <select id="type">
+          <option value="all">All</option>
+          <option value="inward">Inward</option>
+          <option value="outward">Outward</option>
+        </select>
       </div>
 
-      <div class="buttons">
+      <div>
+        <label>Number</label>
 
-        <button class="search-btn" onclick="searchRegister()">
-          🔎 Search
-        </button>
+        <input
+          type="text"
+          id="number"
+          placeholder="IN-001 / OUT-001"
+        >
+      </div>
 
-        <button class="clear-btn" onclick="clearSearch()">
-          Clear
-        </button>
+      <div>
+        <label>From / To</label>
 
+        <input
+          type="text"
+          id="name"
+          placeholder="Office / Person"
+        >
+      </div>
+
+      <div>
+        <label>From Date</label>
+
+        <input type="date" id="fromDate">
+      </div>
+
+      <div>
+        <label>To Date</label>
+
+        <input type="date" id="toDate">
+      </div>
+
+      <div>
+        <label>Subject</label>
+
+        <input
+          type="text"
+          id="subject"
+          placeholder="Search subject"
+        >
       </div>
 
     </div>
 
-    <div class="count" id="resultCount">
-      Showing 0 records
-    </div>
+    <div class="buttons">
 
-    <div class="table-box">
+      <button class="search-btn" onclick="searchRegister()">
+        🔎 Search
+      </button>
 
-      <table>
-
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Number</th>
-            <th>Date</th>
-            <th>From / To</th>
-            <th>Letter No</th>
-            <th>Subject</th>
-            <th>Person</th>
-          </tr>
-        </thead>
-
-        <tbody id="results">
-
-          <tr>
-            <td colspan="7" class="no-data">
-              No records found
-            </td>
-          </tr>
-
-        </tbody>
-
-      </table>
+      <button class="clear-btn" onclick="clearSearch()">
+        Clear
+      </button>
 
     </div>
 
   </div>
 
-  <script>
+  <div class="count" id="resultCount">
+    Showing 0 records
+  </div>
 
-    // Login protection
-    if (localStorage.getItem("loggedIn") !== "true") {
-      window.location.href = "index.html";
-    }
+  <div id="emptyMessage" class="empty-message">
+    ಯಾವುದೇ Inward ಅಥವಾ Outward ದಾಖಲೆಗಳು ಇನ್ನೂ ಇಲ್ಲ.
+  </div>
 
-    /*
-      Search system structure.
+  <div class="table-box">
 
-      Later, when the real database is connected,
-      this section will automatically load all
-      Inward and Outward records.
-    */
+    <table>
 
-    let records = JSON.parse(
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Number</th>
+          <th>Date</th>
+          <th>From / To</th>
+          <th>Letter No.</th>
+          <th>Subject</th>
+          <th>Person</th>
+          <th>Delivery</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="results">
+
+        <tr>
+          <td colspan="9" class="no-data">
+            No records found
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+<script>
+
+  // Login protection
+  if (localStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "index.html";
+  }
+
+
+  // Get saved records
+  function getRecords() {
+
+    return JSON.parse(
       localStorage.getItem("registerRecords") || "[]"
     );
 
-
-    function searchRegister() {
-
-      const type =
-        document.getElementById("type").value;
-
-      const number =
-        document.getElementById("number").value
-        .trim()
-        .toLowerCase();
-
-      const name =
-        document.getElementById("name").value
-        .trim()
-        .toLowerCase();
-
-      const fromDate =
-        document.getElementById("fromDate").value;
-
-      const toDate =
-        document.getElementById("toDate").value;
-
-      const subject =
-        document.getElementById("subject").value
-        .trim()
-        .toLowerCase();
+  }
 
 
-      const filtered = records.filter(function(record) {
+  // Search
+  function searchRegister() {
 
-        if (type !== "all" && record.type !== type) {
-          return false;
-        }
+    const type =
+      document.getElementById("type").value;
 
-        if (
-          number &&
-          !record.number.toLowerCase().includes(number)
-        ) {
-          return false;
-        }
+    const number =
+      document.getElementById("number").value
+      .trim()
+      .toLowerCase();
 
-        if (
-          name &&
-          !record.name.toLowerCase().includes(name)
-        ) {
-          return false;
-        }
+    const name =
+      document.getElementById("name").value
+      .trim()
+      .toLowerCase();
 
-        if (
-          fromDate &&
-          record.date < fromDate
-        ) {
-          return false;
-        }
+    const fromDate =
+      document.getElementById("fromDate").value;
 
-        if (
-          toDate &&
-          record.date > toDate
-        ) {
-          return false;
-        }
+    const toDate =
+      document.getElementById("toDate").value;
 
-        if (
-          subject &&
-          !record.subject.toLowerCase().includes(subject)
-        ) {
-          return false;
-        }
-
-        return true;
-
-      });
+    const subject =
+      document.getElementById("subject").value
+      .trim()
+      .toLowerCase();
 
 
-      displayResults(filtered);
-
-    }
+    const records = getRecords();
 
 
-    function displayResults(data) {
+    const filtered = records.filter(function(record) {
 
-      const results =
-        document.getElementById("results");
-
-      results.innerHTML = "";
-
-      document.getElementById("resultCount").textContent =
-        "Showing " + data.length + " records";
-
-
-      if (data.length === 0) {
-
-        results.innerHTML = `
-          <tr>
-            <td colspan="7" class="no-data">
-              No records found
-            </td>
-          </tr>
-        `;
-
-        return;
+      if (
+        type !== "all" &&
+        record.type !== type
+      ) {
+        return false;
       }
 
 
-      data.forEach(function(record) {
+      if (
+        number &&
+        !String(record.number || "")
+        .toLowerCase()
+        .includes(number)
+      ) {
+        return false;
+      }
 
-        const row = document.createElement("tr");
 
-        row.innerHTML = `
-          <td class="${record.type}">
-            ${record.type.toUpperCase()}
+      if (
+        name &&
+        !String(record.name || "")
+        .toLowerCase()
+        .includes(name)
+      ) {
+        return false;
+      }
+
+
+      if (
+        fromDate &&
+        record.date < fromDate
+      ) {
+        return false;
+      }
+
+
+      if (
+        toDate &&
+        record.date > toDate
+      ) {
+        return false;
+      }
+
+
+      if (
+        subject &&
+        !String(record.subject || "")
+        .toLowerCase()
+        .includes(subject)
+      ) {
+        return false;
+      }
+
+
+      return true;
+
+    });
+
+
+    displayResults(filtered);
+
+  }
+
+
+  // Display records
+  function displayResults(data) {
+
+    const results =
+      document.getElementById("results");
+
+    const emptyMessage =
+      document.getElementById("emptyMessage");
+
+
+    results.innerHTML = "";
+
+
+    document.getElementById("resultCount").textContent =
+      "Showing " + data.length + " records";
+
+
+    if (data.length === 0) {
+
+      results.innerHTML = `
+        <tr>
+          <td colspan="9" class="no-data">
+            No records found
           </td>
+        </tr>
+      `;
 
-          <td>${record.number}</td>
-
-          <td>${record.date}</td>
-
-          <td>${record.name}</td>
-
-          <td>${record.letterNo || "-"}</td>
-
-          <td>${record.subject}</td>
-
-          <td>${record.person || "-"}</td>
-        `;
-
-        results.appendChild(row);
-
-      });
+      return;
 
     }
 
 
-    function clearSearch() {
+    data.forEach(function(record) {
 
-      document.getElementById("type").value = "all";
+      const row =
+        document.createElement("tr");
 
-      document.getElementById("number").value = "";
 
-      document.getElementById("name").value = "";
+      const typeText =
+        record.type === "inward"
+        ? "INWARD"
+        : "OUTWARD";
 
-      document.getElementById("fromDate").value = "";
 
-      document.getElementById("toDate").value = "";
+      row.innerHTML = `
 
-      document.getElementById("subject").value = "";
+        <td class="${record.type}">
+          ${typeText}
+        </td>
 
-      displayResults([]);
+        <td>
+          ${escapeHTML(record.number)}
+        </td>
+
+        <td>
+          ${escapeHTML(record.date)}
+        </td>
+
+        <td>
+          ${escapeHTML(record.name)}
+        </td>
+
+        <td>
+          ${escapeHTML(record.letterNo || "-")}
+        </td>
+
+        <td>
+          ${escapeHTML(record.subject)}
+        </td>
+
+        <td>
+          ${escapeHTML(record.person || "-")}
+        </td>
+
+        <td>
+          ${escapeHTML(record.delivery || "-")}
+        </td>
+
+        <td>
+
+          <button
+            class="action-btn"
+            onclick="viewRecord('${record.id}')"
+          >
+            View
+          </button>
+
+          <button
+            class="delete-btn"
+            onclick="deleteRecord('${record.id}')"
+          >
+            Delete
+          </button>
+
+        </td>
+
+      `;
+
+
+      results.appendChild(row);
+
+    });
+
+  }
+
+
+  // View record
+  function viewRecord(id) {
+
+    const records = getRecords();
+
+    const record =
+      records.find(r => String(r.id) === String(id));
+
+
+    if (!record) {
+
+      alert("Record not found.");
+
+      return;
 
     }
 
-  </script>
+
+    alert(
+
+      "Register: " +
+      record.type.toUpperCase() +
+
+      "\n\nNumber: " +
+      record.number +
+
+      "\nDate: " +
+      record.date +
+
+      "\nFrom / To: " +
+      record.name +
+
+      "\nLetter No: " +
+      (record.letterNo || "-") +
+
+      "\nSubject: " +
+      record.subject +
+
+      "\nPerson: " +
+      (record.person || "-") +
+
+      "\nDelivery: " +
+      (record.delivery || "-") +
+
+      "\nRemarks: " +
+      (record.remarks || "-")
+
+    );
+
+  }
+
+
+  // Delete record
+  function deleteRecord(id) {
+
+    if (
+      !confirm(
+        "ಈ ದಾಖಲೆಯನ್ನು delete ಮಾಡಬೇಕೇ?"
+      )
+    ) {
+      return;
+    }
+
+
+    let records = getRecords();
+
+
+    records =
+      records.filter(
+        r => String(r.id) !== String(id)
+      );
+
+
+    localStorage.setItem(
+      "registerRecords",
+      JSON.stringify(records)
+    );
+
+
+    searchRegister();
+
+  }
+
+
+  // Clear filters
+  function clearSearch() {
+
+    document.getElementById("type").value =
+      "all";
+
+    document.getElementById("number").value =
+      "";
+
+    document.getElementById("name").value =
+      "";
+
+    document.getElementById("fromDate").value =
+      "";
+
+    document.getElementById("toDate").value =
+      "";
+
+    document.getElementById("subject").value =
+      "";
+
+
+    displayResults(getRecords());
+
+  }
+
+
+  // Security helper
+  function escapeHTML(value) {
+
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  // Show all records when page opens
+  displayResults(getRecords());
+
+</script>
 
 </body>
 </html>
