@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +20,7 @@
     }
 
     header {
-      background: #2e7d32;
+      background: #37474f;
       color: white;
       padding: 16px 20px;
     }
@@ -45,8 +44,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 18px;
       gap: 10px;
+      margin-bottom: 18px;
     }
 
     .top h2 {
@@ -70,16 +69,16 @@
       margin-bottom: 20px;
     }
 
-    .filters {
+    .search-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
     }
 
-    label {
+    .field label {
       display: block;
-      font-size: 13px;
       font-weight: bold;
+      font-size: 13px;
       margin-bottom: 6px;
       color: #333;
     }
@@ -96,7 +95,7 @@
 
     input:focus,
     select:focus {
-      border-color: #2e7d32;
+      border-color: #37474f;
     }
 
     .buttons {
@@ -106,48 +105,70 @@
     }
 
     button {
-      padding: 11px 18px;
       border: none;
       border-radius: 8px;
-      cursor: pointer;
+      padding: 11px 18px;
+      font-size: 14px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     .search-btn {
-      background: #2e7d32;
+      background: #37474f;
       color: white;
     }
 
     .clear-btn {
-      background: #777;
-      color: white;
+      background: #e0e0e0;
+      color: #333;
     }
 
-    .table-box {
+    .status {
+      margin: 15px 0;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .error {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .loading {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .result-box {
       background: white;
       border-radius: 14px;
       box-shadow: 0 3px 12px rgba(0,0,0,0.08);
       overflow-x: auto;
     }
 
+    .result-header {
+      padding: 15px 18px;
+      border-bottom: 1px solid #ddd;
+      font-weight: bold;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 950px;
+      min-width: 900px;
     }
 
     th,
     td {
-      padding: 12px 10px;
+      padding: 11px;
       border-bottom: 1px solid #eee;
       text-align: left;
       font-size: 13px;
     }
 
     th {
-      background: #2e7d32;
-      color: white;
-      white-space: nowrap;
+      background: #f5f5f5;
     }
 
     .inward {
@@ -160,51 +181,36 @@
       font-weight: bold;
     }
 
-    .no-data {
+    .no-records {
       text-align: center;
       padding: 30px;
       color: #777;
     }
 
     .count {
-      margin-bottom: 12px;
       color: #555;
-      font-weight: bold;
-    }
-
-    .action-btn {
-      background: #1976d2;
-      color: white;
-      padding: 7px 10px;
-      font-size: 12px;
-    }
-
-    .delete-btn {
-      background: #c62828;
-      color: white;
-      padding: 7px 10px;
-      font-size: 12px;
-      margin-left: 4px;
-    }
-
-    .empty-message {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      color: #666;
-      text-align: center;
-      display: none;
+      font-size: 13px;
+      font-weight: normal;
     }
 
     @media (max-width: 700px) {
-      .filters {
+
+      .search-grid {
         grid-template-columns: 1fr;
       }
 
       .top {
         align-items: flex-start;
       }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+
     }
   </style>
 </head>
@@ -221,26 +227,41 @@
   <div class="top">
     <h2>🔎 Search Register</h2>
 
-    <a href="dashboard.html" class="back-btn">
+    <a
+      href="dashboard.html"
+      class="back-btn"
+    >
       ← Dashboard
     </a>
   </div>
 
+
   <div class="search-box">
 
-    <div class="filters">
+    <div class="search-grid">
 
-      <div>
+      <div class="field">
         <label>Register Type</label>
 
         <select id="type">
-          <option value="all">All</option>
-          <option value="inward">Inward</option>
-          <option value="outward">Outward</option>
+
+          <option value="">
+            All
+          </option>
+
+          <option value="Inward">
+            Inward
+          </option>
+
+          <option value="Outward">
+            Outward
+          </option>
+
         </select>
       </div>
 
-      <div>
+
+      <div class="field">
         <label>Number</label>
 
         <input
@@ -250,29 +271,30 @@
         >
       </div>
 
-      <div>
-        <label>From / To</label>
+
+      <div class="field">
+        <label>Name / From / To</label>
 
         <input
           type="text"
           id="name"
-          placeholder="Office / Person"
+          placeholder="Search name"
         >
       </div>
 
-      <div>
-        <label>From Date</label>
 
-        <input type="date" id="fromDate">
+      <div class="field">
+        <label>Letter Number</label>
+
+        <input
+          type="text"
+          id="letterNo"
+          placeholder="Search letter number"
+        >
       </div>
 
-      <div>
-        <label>To Date</label>
 
-        <input type="date" id="toDate">
-      </div>
-
-      <div>
+      <div class="field">
         <label>Subject</label>
 
         <input
@@ -282,15 +304,32 @@
         >
       </div>
 
+
+      <div class="field">
+        <label>Date</label>
+
+        <input
+          type="date"
+          id="date"
+        >
+      </div>
+
     </div>
+
 
     <div class="buttons">
 
-      <button class="search-btn" onclick="searchRegister()">
+      <button
+        class="search-btn"
+        onclick="searchRecords()"
+      >
         🔎 Search
       </button>
 
-      <button class="clear-btn" onclick="clearSearch()">
+      <button
+        class="clear-btn"
+        onclick="clearSearch()"
+      >
         Clear
       </button>
 
@@ -298,37 +337,60 @@
 
   </div>
 
-  <div class="count" id="resultCount">
-    Showing 0 records
+
+  <div
+    id="loading"
+    class="status loading"
+  >
+    Loading records...
   </div>
 
-  <div id="emptyMessage" class="empty-message">
-    ಯಾವುದೇ Inward ಅಥವಾ Outward ದಾಖಲೆಗಳು ಇನ್ನೂ ಇಲ್ಲ.
-  </div>
 
-  <div class="table-box">
+  <div
+    id="error"
+    class="status error"
+  ></div>
+
+
+  <div class="result-box">
+
+    <div class="result-header">
+      Search Results
+      <span
+        id="count"
+        class="count"
+      >
+        (0 records)
+      </span>
+    </div>
+
 
     <table>
 
       <thead>
+
         <tr>
           <th>Type</th>
           <th>Number</th>
           <th>Date</th>
-          <th>From / To</th>
+          <th>Name / From / To</th>
           <th>Letter No.</th>
           <th>Subject</th>
           <th>Person</th>
           <th>Delivery</th>
-          <th>Action</th>
         </tr>
+
       </thead>
+
 
       <tbody id="results">
 
         <tr>
-          <td colspan="9" class="no-data">
-            No records found
+          <td
+            colspan="8"
+            class="no-records"
+          >
+            Click Search to load records
           </td>
         </tr>
 
@@ -340,143 +402,260 @@
 
 </div>
 
+
 <script>
 
-  // Login protection
-  if (localStorage.getItem("loggedIn") !== "true") {
-    window.location.href = "index.html";
+  /* SUPABASE CONFIGURATION */
+
+  const SUPABASE_URL =
+    "https://hmexumitktsxswcqdeef.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
+
+
+  let allRecords = [];
+
+
+  /* LOAD RECORDS */
+
+  async function loadRecords() {
+
+    const loading =
+      document.getElementById("loading");
+
+    const errorBox =
+      document.getElementById("error");
+
+    loading.style.display =
+      "block";
+
+    errorBox.style.display =
+      "none";
+
+
+    try {
+
+      const response =
+        await fetch(
+          SUPABASE_URL +
+          "/rest/v1/register_records?select=*&order=created_at.desc",
+          {
+            method: "GET",
+
+            headers: {
+              "apikey":
+                SUPABASE_ANON_KEY,
+
+              "Authorization":
+                "Bearer " +
+                SUPABASE_ANON_KEY
+            }
+          }
+        );
+
+
+      if (!response.ok) {
+
+        const message =
+          await response.text();
+
+        throw new Error(message);
+
+      }
+
+
+      allRecords =
+        await response.json();
+
+
+      displayRecords(allRecords);
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      errorBox.textContent =
+        "Records load ಆಗಲಿಲ್ಲ. Supabase key ಅಥವಾ connection check ಮಾಡಿ.";
+
+      errorBox.style.display =
+        "block";
+
+    }
+
+    finally {
+
+      loading.style.display =
+        "none";
+
+    }
+
   }
 
 
-  // Get saved records
-  function getRecords() {
+  /* SEARCH */
 
-    return JSON.parse(
-      localStorage.getItem("registerRecords") || "[]"
-    );
-
-  }
-
-
-  // Search
-  function searchRegister() {
+  function searchRecords() {
 
     const type =
-      document.getElementById("type").value;
+      document.getElementById(
+        "type"
+      ).value
+      .trim()
+      .toLowerCase();
+
 
     const number =
-      document.getElementById("number").value
+      document.getElementById(
+        "number"
+      ).value
       .trim()
       .toLowerCase();
+
 
     const name =
-      document.getElementById("name").value
+      document.getElementById(
+        "name"
+      ).value
       .trim()
       .toLowerCase();
 
-    const fromDate =
-      document.getElementById("fromDate").value;
 
-    const toDate =
-      document.getElementById("toDate").value;
+    const letterNo =
+      document.getElementById(
+        "letterNo"
+      ).value
+      .trim()
+      .toLowerCase();
+
 
     const subject =
-      document.getElementById("subject").value
+      document.getElementById(
+        "subject"
+      ).value
       .trim()
       .toLowerCase();
 
 
-    const records = getRecords();
+    const date =
+      document.getElementById(
+        "date"
+      ).value;
 
 
-    const filtered = records.filter(function(record) {
+    const filtered =
+      allRecords.filter(
+        function(record) {
 
-      if (
-        type !== "all" &&
-        record.type !== type
-      ) {
-        return false;
-      }
-
-
-      if (
-        number &&
-        !String(record.number || "")
-        .toLowerCase()
-        .includes(number)
-      ) {
-        return false;
-      }
+          const recordType =
+            String(
+              record.type || ""
+            ).toLowerCase();
 
 
-      if (
-        name &&
-        !String(record.name || "")
-        .toLowerCase()
-        .includes(name)
-      ) {
-        return false;
-      }
+          const recordNumber =
+            String(
+              record.number || ""
+            ).toLowerCase();
 
 
-      if (
-        fromDate &&
-        record.date < fromDate
-      ) {
-        return false;
-      }
+          const recordName =
+            String(
+              record.name || ""
+            ).toLowerCase();
 
 
-      if (
-        toDate &&
-        record.date > toDate
-      ) {
-        return false;
-      }
+          const recordLetter =
+            String(
+              record.letter_no || ""
+            ).toLowerCase();
 
 
-      if (
-        subject &&
-        !String(record.subject || "")
-        .toLowerCase()
-        .includes(subject)
-      ) {
-        return false;
-      }
+          const recordSubject =
+            String(
+              record.subject || ""
+            ).toLowerCase();
 
 
-      return true;
+          const recordDate =
+            String(
+              record.date || ""
+            );
 
-    });
+
+          return (
+
+            (!type ||
+              recordType === type)
+
+            &&
+
+            (!number ||
+              recordNumber.includes(number))
+
+            &&
+
+            (!name ||
+              recordName.includes(name))
+
+            &&
+
+            (!letterNo ||
+              recordLetter.includes(letterNo))
+
+            &&
+
+            (!subject ||
+              recordSubject.includes(subject))
+
+            &&
+
+            (!date ||
+              recordDate === date)
+
+          );
+
+        }
+      );
 
 
-    displayResults(filtered);
+    displayRecords(filtered);
 
   }
 
 
-  // Display records
-  function displayResults(data) {
+  /* DISPLAY RECORDS */
 
-    const results =
-      document.getElementById("results");
+  function displayRecords(records) {
 
-    const emptyMessage =
-      document.getElementById("emptyMessage");
-
-
-    results.innerHTML = "";
+    const tbody =
+      document.getElementById(
+        "results"
+      );
 
 
-    document.getElementById("resultCount").textContent =
-      "Showing " + data.length + " records";
+    const count =
+      document.getElementById(
+        "count"
+      );
 
 
-    if (data.length === 0) {
+    count.textContent =
+      "(" +
+      records.length +
+      " records)";
 
-      results.innerHTML = `
+
+    if (!records.length) {
+
+      tbody.innerHTML = `
         <tr>
-          <td colspan="9" class="no-data">
+          <td
+            colspan="8"
+            class="no-records"
+          >
             No records found
           </td>
         </tr>
@@ -487,209 +666,145 @@
     }
 
 
-    data.forEach(function(record) {
+    tbody.innerHTML =
+      records.map(
+        function(record) {
 
-      const row =
-        document.createElement("tr");
-
-
-      const typeText =
-        record.type === "inward"
-        ? "INWARD"
-        : "OUTWARD";
+          const type =
+            String(
+              record.type || ""
+            );
 
 
-      row.innerHTML = `
-
-        <td class="${record.type}">
-          ${typeText}
-        </td>
-
-        <td>
-          ${escapeHTML(record.number)}
-        </td>
-
-        <td>
-          ${escapeHTML(record.date)}
-        </td>
-
-        <td>
-          ${escapeHTML(record.name)}
-        </td>
-
-        <td>
-          ${escapeHTML(record.letterNo || "-")}
-        </td>
-
-        <td>
-          ${escapeHTML(record.subject)}
-        </td>
-
-        <td>
-          ${escapeHTML(record.person || "-")}
-        </td>
-
-        <td>
-          ${escapeHTML(record.delivery || "-")}
-        </td>
-
-        <td>
-
-          <button
-            class="action-btn"
-            onclick="viewRecord('${record.id}')"
-          >
-            View
-          </button>
-
-          <button
-            class="delete-btn"
-            onclick="deleteRecord('${record.id}')"
-          >
-            Delete
-          </button>
-
-        </td>
-
-      `;
+          const typeClass =
+            type.toLowerCase()
+              === "inward"
+              ? "inward"
+              : "outward";
 
 
-      results.appendChild(row);
+          return `
+            <tr>
 
-    });
+              <td class="${typeClass}">
+                ${escapeHTML(type)}
+              </td>
+
+              <td>
+                ${escapeHTML(record.number)}
+              </td>
+
+              <td>
+                ${escapeHTML(record.date)}
+              </td>
+
+              <td>
+                ${escapeHTML(record.name)}
+              </td>
+
+              <td>
+                ${escapeHTML(record.letter_no)}
+              </td>
+
+              <td>
+                ${escapeHTML(record.subject)}
+              </td>
+
+              <td>
+                ${escapeHTML(record.person)}
+              </td>
+
+              <td>
+                ${escapeHTML(record.delivery)}
+              </td>
+
+            </tr>
+          `;
+
+        }
+      ).join("");
 
   }
 
 
-  // View record
-  function viewRecord(id) {
+  /* SECURITY */
 
-    const records = getRecords();
-
-    const record =
-      records.find(r => String(r.id) === String(id));
-
-
-    if (!record) {
-
-      alert("Record not found.");
-
-      return;
-
-    }
-
-
-    alert(
-
-      "Register: " +
-      record.type.toUpperCase() +
-
-      "\n\nNumber: " +
-      record.number +
-
-      "\nDate: " +
-      record.date +
-
-      "\nFrom / To: " +
-      record.name +
-
-      "\nLetter No: " +
-      (record.letterNo || "-") +
-
-      "\nSubject: " +
-      record.subject +
-
-      "\nPerson: " +
-      (record.person || "-") +
-
-      "\nDelivery: " +
-      (record.delivery || "-") +
-
-      "\nRemarks: " +
-      (record.remarks || "-")
-
-    );
-
-  }
-
-
-  // Delete record
-  function deleteRecord(id) {
-
-    if (
-      !confirm(
-        "ಈ ದಾಖಲೆಯನ್ನು delete ಮಾಡಬೇಕೇ?"
-      )
-    ) {
-      return;
-    }
-
-
-    let records = getRecords();
-
-
-    records =
-      records.filter(
-        r => String(r.id) !== String(id)
-      );
-
-
-    localStorage.setItem(
-      "registerRecords",
-      JSON.stringify(records)
-    );
-
-
-    searchRegister();
-
-  }
-
-
-  // Clear filters
-  function clearSearch() {
-
-    document.getElementById("type").value =
-      "all";
-
-    document.getElementById("number").value =
-      "";
-
-    document.getElementById("name").value =
-      "";
-
-    document.getElementById("fromDate").value =
-      "";
-
-    document.getElementById("toDate").value =
-      "";
-
-    document.getElementById("subject").value =
-      "";
-
-
-    displayResults(getRecords());
-
-  }
-
-
-  // Security helper
   function escapeHTML(value) {
 
-    return String(value || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return "";
+    }
+
+
+    return String(value)
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
 
   }
 
 
-  // Show all records when page opens
-  displayResults(getRecords());
+  /* CLEAR */
+
+  function clearSearch() {
+
+    document.getElementById(
+      "type"
+    ).value = "";
+
+    document.getElementById(
+      "number"
+    ).value = "";
+
+    document.getElementById(
+      "name"
+    ).value = "";
+
+    document.getElementById(
+      "letterNo"
+    ).value = "";
+
+    document.getElementById(
+      "subject"
+    ).value = "";
+
+    document.getElementById(
+      "date"
+    ).value = "";
+
+
+    displayRecords(
+      allRecords
+    );
+
+  }
+
+
+  /* LOAD WHEN PAGE OPENS */
+
+  loadRecords();
 
 </script>
 
 </body>
 </html>
-```
