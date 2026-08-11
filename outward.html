@@ -46,6 +46,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 18px;
+      gap: 10px;
     }
 
     .top h2 {
@@ -139,198 +140,348 @@
       text-align: center;
       font-weight: bold;
     }
+
+    .note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #777;
+      line-height: 1.5;
+    }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>Hanawal Gram Panchayat</h1>
-    <p>Inward &amp; Outward Register</p>
-  </header>
+<header>
+  <h1>Hanawal Gram Panchayat</h1>
+  <p>Inward &amp; Outward Register</p>
+</header>
 
-  <div class="container">
+<div class="container">
 
-    <div class="top">
-      <h2>📤 Outward Entry</h2>
+  <div class="top">
+    <h2>📤 Outward Entry</h2>
 
-      <a href="dashboard.html" class="back-btn">
-        ← Dashboard
-      </a>
-    </div>
+    <a href="dashboard.html" class="back-btn">
+      ← Dashboard
+    </a>
+  </div>
 
-    <div class="form-box">
+  <div class="form-box">
 
-      <form id="outwardForm">
+    <form id="outwardForm">
 
-        <div class="form-group">
-          <label>
-            Outward Number
-          </label>
+      <div class="form-group">
+        <label>Outward Number</label>
 
-          <input
-            type="text"
-            id="outwardNo"
-            class="outward-number"
-            readonly
-          >
-        </div>
+        <input
+          type="text"
+          id="outwardNo"
+          class="outward-number"
+          readonly
+        >
+      </div>
 
-        <div class="form-group">
-          <label>
-            Date <span class="required">*</span>
-          </label>
+      <div class="form-group">
+        <label>
+          Date <span class="required">*</span>
+        </label>
 
-          <input
-            type="date"
-            id="date"
-            required
-          >
-        </div>
+        <input
+          type="date"
+          id="date"
+          required
+        >
+      </div>
 
-        <div class="form-group">
-          <label>
-            Reference / Letter Number
-          </label>
+      <div class="form-group">
+        <label>Reference / Letter Number</label>
 
-          <input
-            type="text"
-            id="letterNo"
-            placeholder="Enter reference number"
-          >
-        </div>
+        <input
+          type="text"
+          id="letterNo"
+          placeholder="Enter reference number"
+        >
+      </div>
 
-        <div class="form-group">
-          <label>
-            To / Sent To <span class="required">*</span>
-          </label>
+      <div class="form-group">
+        <label>
+          To / Sent To <span class="required">*</span>
+        </label>
 
-          <input
-            type="text"
-            id="to"
-            placeholder="Example: Tahsildar Office"
-            required
-          >
-        </div>
+        <input
+          type="text"
+          id="to"
+          placeholder="Example: Tahsildar Office"
+          required
+        >
+      </div>
 
-        <div class="form-group">
-          <label>
-            Subject <span class="required">*</span>
-          </label>
+      <div class="form-group">
+        <label>
+          Subject <span class="required">*</span>
+        </label>
 
-          <textarea
-            id="subject"
-            placeholder="Enter subject"
-            required
-          ></textarea>
-        </div>
+        <textarea
+          id="subject"
+          placeholder="Enter subject"
+          required
+        ></textarea>
+      </div>
 
-        <div class="form-group">
-          <label>
-            Sent By
-          </label>
+      <div class="form-group">
+        <label>Sent By</label>
 
-          <input
-            type="text"
-            id="sentBy"
-            placeholder="Enter name"
-          >
-        </div>
+        <input
+          type="text"
+          id="sentBy"
+          placeholder="Enter name"
+        >
+      </div>
 
-        <div class="form-group">
-          <label>
-            Delivery Mode
-          </label>
+      <div class="form-group">
+        <label>Delivery Mode</label>
 
-          <select id="deliveryMode">
-            <option value="">Select delivery mode</option>
-            <option value="Post">Post</option>
-            <option value="Registered Post">Registered Post</option>
-            <option value="Speed Post">Speed Post</option>
-            <option value="Email">Email</option>
-            <option value="Hand Delivery">Hand Delivery</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+        <select id="deliveryMode">
 
-        <div class="form-group">
-          <label>
-            Remarks
-          </label>
+          <option value="">
+            Select delivery mode
+          </option>
 
-          <textarea
-            id="remarks"
-            placeholder="Enter remarks"
-          ></textarea>
-        </div>
+          <option value="Post">
+            Post
+          </option>
 
-        <div class="form-group">
-          <label>
-            Upload Document
-          </label>
+          <option value="Registered Post">
+            Registered Post
+          </option>
 
-          <input
-            type="file"
-            id="document"
-            accept=".pdf,.jpg,.jpeg,.png"
-          >
-        </div>
+          <option value="Speed Post">
+            Speed Post
+          </option>
 
-        <button type="submit" class="save-btn">
-          💾 Save Outward
-        </button>
+          <option value="Email">
+            Email
+          </option>
 
-        <div id="successMessage" class="success">
-          Outward entry saved successfully!
-        </div>
+          <option value="Hand Delivery">
+            Hand Delivery
+          </option>
 
-      </form>
+          <option value="Other">
+            Other
+          </option>
 
-    </div>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Remarks</label>
+
+        <textarea
+          id="remarks"
+          placeholder="Enter remarks"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Upload Document</label>
+
+        <input
+          type="file"
+          id="document"
+          accept=".pdf,.jpg,.jpeg,.png"
+        >
+      </div>
+
+      <button type="submit" class="save-btn">
+        💾 Save Outward
+      </button>
+
+      <div id="successMessage" class="success">
+        Outward entry saved successfully!
+      </div>
+
+      <div class="note">
+        Note: ಈಗ entry registerRecordsನಲ್ಲಿ save ಆಗುತ್ತದೆ.
+        Document upload storage ಅನ್ನು ಮುಂದಿನ ಹಂತದಲ್ಲಿ ಸೇರಿಸಲಾಗುತ್ತದೆ.
+      </div>
+
+    </form>
 
   </div>
 
-  <script>
+</div>
 
-    // Login protection
-    if (localStorage.getItem("loggedIn") !== "true") {
-      window.location.href = "index.html";
-    }
+<script>
 
-    // Today's date
-    const today = new Date().toISOString().split("T")[0];
-    document.getElementById("date").value = today;
-
-    // Generate outward number
-    let totalOutward =
-      parseInt(localStorage.getItem("totalOutward") || "0");
-
-    document.getElementById("outwardNo").value =
-      "OUT-" + String(totalOutward + 1).padStart(3, "0");
+  // Login protection
+  if (localStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "index.html";
+  }
 
 
-    document.getElementById("outwardForm").addEventListener("submit", function(event) {
+  // Today's date
+  const today =
+    new Date().toISOString().split("T")[0];
+
+  document.getElementById("date").value = today;
+
+
+  // Get existing records
+  function getRecords() {
+
+    return JSON.parse(
+      localStorage.getItem("registerRecords") || "[]"
+    );
+
+  }
+
+
+  // Generate next Outward number
+  function getNextOutwardNumber() {
+
+    const records = getRecords();
+
+    const outwardRecords =
+      records.filter(
+        record => record.type === "outward"
+      );
+
+    const nextNumber =
+      outwardRecords.length + 1;
+
+    return "OUT-" +
+      String(nextNumber).padStart(3, "0");
+
+  }
+
+
+  // Show number when page opens
+  document.getElementById("outwardNo").value =
+    getNextOutwardNumber();
+
+
+  // Save Outward
+  document.getElementById("outwardForm")
+    .addEventListener("submit", function(event) {
 
       event.preventDefault();
 
-      totalOutward++;
 
-      localStorage.setItem("totalOutward", totalOutward);
+      const records = getRecords();
 
-      localStorage.setItem("todayOutward", "1");
 
-      document.getElementById("successMessage").style.display = "block";
+      const record = {
 
-      document.getElementById("outwardForm").reset();
+        id:
+          Date.now().toString(),
 
-      document.getElementById("date").value = today;
+        type:
+          "outward",
 
-      document.getElementById("outwardNo").value =
-        "OUT-" + String(totalOutward + 1).padStart(3, "0");
+        number:
+          document.getElementById("outwardNo").value,
+
+        date:
+          document.getElementById("date").value,
+
+        letterNo:
+          document.getElementById("letterNo").value.trim(),
+
+        name:
+          document.getElementById("to").value.trim(),
+
+        subject:
+          document.getElementById("subject").value.trim(),
+
+        person:
+          document.getElementById("sentBy").value.trim(),
+
+        delivery:
+          document.getElementById("deliveryMode").value,
+
+        remarks:
+          document.getElementById("remarks").value.trim(),
+
+        createdAt:
+          new Date().toISOString()
+
+      };
+
+
+      // Add new record
+      records.push(record);
+
+
+      // Save records
+      localStorage.setItem(
+        "registerRecords",
+        JSON.stringify(records)
+      );
+
+
+      // Update counters
+      const totalOutward =
+        records.filter(
+          r => r.type === "outward"
+        ).length;
+
+      const todayOutward =
+        records.filter(
+          r =>
+            r.type === "outward" &&
+            r.date === today
+        ).length;
+
+
+      localStorage.setItem(
+        "totalOutward",
+        totalOutward
+      );
+
+      localStorage.setItem(
+        "todayOutward",
+        todayOutward
+      );
+
+
+      // Show success
+      document.getElementById(
+        "successMessage"
+      ).style.display = "block";
+
+
+      // Reset form
+      document.getElementById(
+        "outwardForm"
+      ).reset();
+
+
+      // Set today's date again
+      document.getElementById(
+        "date"
+      ).value = today;
+
+
+      // Generate next number
+      document.getElementById(
+        "outwardNo"
+      ).value = getNextOutwardNumber();
+
+
+      // Hide success message
+      setTimeout(function() {
+
+        document.getElementById(
+          "successMessage"
+        ).style.display = "none";
+
+      }, 3000);
 
     });
 
-  </script>
+</script>
 
 </body>
 </html>
