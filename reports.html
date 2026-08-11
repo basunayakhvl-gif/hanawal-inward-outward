@@ -8,6 +8,7 @@
   <title>Reports - Hanawal Gram Panchayat</title>
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -121,11 +122,6 @@
       outline: none;
     }
 
-    input:focus,
-    select:focus {
-      border-color: #2e7d32;
-    }
-
     .buttons {
       display: flex;
       gap: 10px;
@@ -156,6 +152,16 @@
       color: white;
     }
 
+    .excel-btn {
+      background: #388e3c;
+      color: white;
+    }
+
+    .pdf-btn {
+      background: #c62828;
+      color: white;
+    }
+
     .report-title {
       text-align: center;
       margin-bottom: 15px;
@@ -169,6 +175,13 @@
     .report-title p {
       color: #555;
       font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .result-count {
+      margin-bottom: 12px;
+      color: #555;
+      font-weight: bold;
     }
 
     .table-box {
@@ -214,12 +227,6 @@
       color: #777;
     }
 
-    .result-count {
-      margin-bottom: 12px;
-      color: #555;
-      font-weight: bold;
-    }
-
     @media (max-width: 800px) {
 
       .summary {
@@ -254,7 +261,8 @@
       .top,
       .filter-box,
       .summary,
-      .result-count {
+      .result-count,
+      .no-print {
         display: none !important;
       }
 
@@ -279,8 +287,8 @@
 
       th,
       td {
-        font-size: 10px;
-        padding: 6px;
+        font-size: 9px;
+        padding: 5px;
       }
 
       th {
@@ -289,75 +297,111 @@
       }
 
     }
+
   </style>
+
 </head>
 
 <body>
 
 <header>
-  <h1>Hanawal Gram Panchayat</h1>
-  <p>Inward &amp; Outward Register</p>
+
+  <h1>
+    Hanawal Gram Panchayat
+  </h1>
+
+  <p>
+    Inward &amp; Outward Register
+  </p>
+
 </header>
+
 
 <div class="container">
 
+
   <div class="top">
 
-    <h2>📊 Reports</h2>
+    <h2>
+      📊 Reports
+    </h2>
 
-    <a href="dashboard.html" class="back-btn">
+    <a
+      href="dashboard.html"
+      class="back-btn"
+    >
       ← Dashboard
     </a>
 
   </div>
 
 
-  <!-- Summary -->
+  <!-- SUMMARY -->
 
   <div class="summary">
 
     <div class="summary-card">
-      <h3>Total Records</h3>
+
+      <h3>
+        Total Records
+      </h3>
+
       <div
         class="summary-number"
         id="totalRecords"
       >
         0
       </div>
+
     </div>
 
+
     <div class="summary-card">
-      <h3>Total Inward</h3>
+
+      <h3>
+        Total Inward
+      </h3>
+
       <div
         class="summary-number"
         id="totalInward"
       >
         0
       </div>
+
     </div>
 
+
     <div class="summary-card">
-      <h3>Total Outward</h3>
+
+      <h3>
+        Total Outward
+      </h3>
+
       <div
         class="summary-number"
         id="totalOutward"
       >
         0
       </div>
+
     </div>
 
   </div>
 
 
-  <!-- Filters -->
+  <!-- FILTER -->
 
   <div class="filter-box">
 
     <div class="filters">
 
+
       <div>
 
-        <label>Register Type</label>
+        <label>
+          Register Type
+        </label>
 
         <select id="type">
 
@@ -380,7 +424,9 @@
 
       <div>
 
-        <label>From Date</label>
+        <label>
+          From Date
+        </label>
 
         <input
           type="date"
@@ -392,7 +438,9 @@
 
       <div>
 
-        <label>To Date</label>
+        <label>
+          To Date
+        </label>
 
         <input
           type="date"
@@ -404,7 +452,9 @@
 
       <div>
 
-        <label>Search</label>
+        <label>
+          Search
+        </label>
 
         <input
           type="text"
@@ -414,10 +464,12 @@
 
       </div>
 
+
     </div>
 
 
-    <div class="buttons">
+    <div class="buttons no-print">
+
 
       <button
         class="generate-btn"
@@ -426,6 +478,7 @@
         📊 Generate Report
       </button>
 
+
       <button
         class="clear-btn"
         onclick="clearFilters()"
@@ -433,19 +486,37 @@
         Clear
       </button>
 
+
       <button
         class="print-btn"
-        onclick="window.print()"
+        onclick="printReport()"
       >
         🖨️ Print
       </button>
+
+
+      <button
+        class="pdf-btn"
+        onclick="downloadPDF()"
+      >
+        📄 PDF
+      </button>
+
+
+      <button
+        class="excel-btn"
+        onclick="downloadExcel()"
+      >
+        📊 Excel
+      </button>
+
 
     </div>
 
   </div>
 
 
-  <!-- Printable title -->
+  <!-- PRINT TITLE -->
 
   <div
     class="report-title"
@@ -473,33 +544,51 @@
   </div>
 
 
-  <!-- Table -->
+  <!-- TABLE -->
 
   <div class="table-box">
 
-    <table>
+    <table id="reportTable">
 
       <thead>
 
         <tr>
 
-          <th>Sl.No</th>
+          <th>
+            Sl.No
+          </th>
 
-          <th>Type</th>
+          <th>
+            Type
+          </th>
 
-          <th>Number</th>
+          <th>
+            Number
+          </th>
 
-          <th>Date</th>
+          <th>
+            Date
+          </th>
 
-          <th>From / To</th>
+          <th>
+            From / To
+          </th>
 
-          <th>Letter No.</th>
+          <th>
+            Letter No.
+          </th>
 
-          <th>Subject</th>
+          <th>
+            Subject
+          </th>
 
-          <th>Person</th>
+          <th>
+            Person
+          </th>
 
-          <th>Delivery</th>
+          <th>
+            Delivery
+          </th>
 
         </tr>
 
@@ -525,15 +614,18 @@
 
   </div>
 
+
 </div>
 
 
 <script>
 
-  // Login protection
+
+  // LOGIN PROTECTION
 
   if (
-    localStorage.getItem("loggedIn") !== "true"
+    localStorage.getItem("loggedIn")
+    !== "true"
   ) {
 
     window.location.href =
@@ -542,36 +634,58 @@
   }
 
 
-  // Get records
+  // GET RECORDS
 
   function getRecords() {
 
     return JSON.parse(
+
       localStorage.getItem(
         "registerRecords"
       ) || "[]"
+
     );
 
   }
 
 
-  // Escape HTML
+  // ESCAPE HTML
 
   function escapeHTML(value) {
 
     return String(value || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
 
   }
 
 
-  // Generate report
+  // FILTER RECORDS
 
-  function generateReport() {
+  function getFilteredRecords() {
 
     const type =
       document.getElementById(
@@ -603,11 +717,9 @@
       getRecords();
 
 
-    const filtered =
-      records.filter(function(record) {
+    return records.filter(
+      function(record) {
 
-
-        // Type
 
         if (
           type !== "all" &&
@@ -619,8 +731,6 @@
         }
 
 
-        // From date
-
         if (
           fromDate &&
           record.date < fromDate
@@ -630,8 +740,6 @@
 
         }
 
-
-        // To date
 
         if (
           toDate &&
@@ -643,11 +751,9 @@
         }
 
 
-        // Search
-
         if (search) {
 
-          const text = (
+          const text =
 
             String(
               record.number || ""
@@ -669,13 +775,13 @@
 
             String(
               record.letterNo || ""
-            )
-
-          ).toLowerCase();
+            );
 
 
           if (
-            !text.includes(search)
+            !text
+              .toLowerCase()
+              .includes(search)
           ) {
 
             return false;
@@ -687,15 +793,13 @@
 
         return true;
 
-      });
-
-
-    displayReport(filtered);
+      }
+    );
 
   }
 
 
-  // Display report
+  // DISPLAY REPORT
 
   function displayReport(data) {
 
@@ -716,24 +820,9 @@
       " records";
 
 
-    document.getElementById(
-      "reportTitle"
-    ).style.display =
-      "block";
-
-
-    const now =
-      new Date();
-
-
-    document.getElementById(
-      "reportDate"
-    ).textContent =
-      "Generated on: " +
-      now.toLocaleDateString();
-
-
-    if (data.length === 0) {
+    if (
+      data.length === 0
+    ) {
 
       results.innerHTML = `
 
@@ -758,8 +847,11 @@
     data.forEach(
       function(record, index) {
 
+
         const row =
-          document.createElement("tr");
+          document.createElement(
+            "tr"
+          );
 
 
         const typeText =
@@ -825,7 +917,9 @@
         `;
 
 
-        results.appendChild(row);
+        results.appendChild(
+          row
+        );
 
       }
     );
@@ -833,28 +927,59 @@
   }
 
 
-  // Clear filters
+  // GENERATE REPORT
+
+  function generateReport() {
+
+    const data =
+      getFilteredRecords();
+
+
+    displayReport(data);
+
+
+    document.getElementById(
+      "reportTitle"
+    ).style.display =
+      "block";
+
+
+    document.getElementById(
+      "reportDate"
+    ).textContent =
+      "Generated on: " +
+      new Date()
+        .toLocaleDateString();
+
+  }
+
+
+  // CLEAR FILTERS
 
   function clearFilters() {
 
     document.getElementById(
       "type"
-    ).value = "all";
+    ).value =
+      "all";
 
 
     document.getElementById(
       "fromDate"
-    ).value = "";
+    ).value =
+      "";
 
 
     document.getElementById(
       "toDate"
-    ).value = "";
+    ).value =
+      "";
 
 
     document.getElementById(
       "search"
-    ).value = "";
+    ).value =
+      "";
 
 
     document.getElementById(
@@ -870,7 +995,7 @@
   }
 
 
-  // Update summary
+  // SUMMARY
 
   function updateSummary() {
 
@@ -880,13 +1005,15 @@
 
     const inward =
       records.filter(
-        r => r.type === "inward"
+        r =>
+          r.type === "inward"
       ).length;
 
 
     const outward =
       records.filter(
-        r => r.type === "outward"
+        r =>
+          r.type === "outward"
       ).length;
 
 
@@ -910,13 +1037,178 @@
   }
 
 
-  // Initial load
+  // PRINT
+
+  function printReport() {
+
+    generateReport();
+
+    setTimeout(
+      function() {
+
+        window.print();
+
+      },
+      300
+    );
+
+  }
+
+
+  // EXCEL DOWNLOAD
+
+  function downloadExcel() {
+
+    const data =
+      getFilteredRecords();
+
+
+    if (
+      data.length === 0
+    ) {
+
+      alert(
+        "No records available for Excel download."
+      );
+
+      return;
+
+    }
+
+
+    let csv = "";
+
+
+    csv +=
+      "Sl.No,Type,Number,Date,From / To,Letter No.,Subject,Person,Delivery\n";
+
+
+    data.forEach(
+      function(record, index) {
+
+
+        const row = [
+
+          index + 1,
+
+          record.type === "inward"
+            ? "INWARD"
+            : "OUTWARD",
+
+          record.number || "",
+
+          record.date || "",
+
+          record.name || "",
+
+          record.letterNo || "",
+
+          record.subject || "",
+
+          record.person || "",
+
+          record.delivery || ""
+
+        ];
+
+
+        csv += row
+          .map(
+            function(value) {
+
+              return '"' +
+                String(value)
+                  .replace(
+                    /"/g,
+                    '""'
+                  ) +
+                '"';
+
+            }
+          )
+          .join(",") +
+          "\n";
+
+      }
+    );
+
+
+    const blob =
+      new Blob(
+        ["\ufeff" + csv],
+        {
+          type:
+            "text/csv;charset=utf-8;"
+        }
+      );
+
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+
+    link.href = url;
+
+    link.download =
+      "Hanawal_Inward_Outward_Report.csv";
+
+
+    document.body.appendChild(
+      link
+    );
+
+
+    link.click();
+
+
+    document.body.removeChild(
+      link
+    );
+
+
+    URL.revokeObjectURL(
+      url
+    );
+
+  }
+
+
+  // PDF DOWNLOAD
+
+  function downloadPDF() {
+
+    generateReport();
+
+
+    setTimeout(
+      function() {
+
+        window.print();
+
+      },
+      300
+    );
+
+  }
+
+
+  // INITIAL LOAD
 
   updateSummary();
+
 
   displayReport(
     getRecords()
   );
+
 
 </script>
 
