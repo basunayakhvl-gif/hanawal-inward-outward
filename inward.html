@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +20,7 @@
     }
 
     header {
-      background: #2e7d32;
+      background: #1565c0;
       color: white;
       padding: 16px 20px;
     }
@@ -82,7 +81,8 @@
     }
 
     input,
-    textarea {
+    textarea,
+    select {
       width: 100%;
       padding: 12px;
       border: 1px solid #ccc;
@@ -97,8 +97,9 @@
     }
 
     input:focus,
-    textarea:focus {
-      border-color: #2e7d32;
+    textarea:focus,
+    select:focus {
+      border-color: #1565c0;
     }
 
     .required {
@@ -106,26 +107,26 @@
     }
 
     .inward-number {
-      background: #f1f8e9;
+      background: #e3f2fd;
       font-weight: bold;
-      color: #33691e;
+      color: #1565c0;
     }
 
     .save-btn {
       width: 100%;
       padding: 14px;
-      background: #2e7d32;
+      background: #1565c0;
       color: white;
       border: none;
       border-radius: 8px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 5px;
     }
 
-    .save-btn:hover {
-      background: #1b5e20;
+    .save-btn:disabled {
+      background: #999;
+      cursor: not-allowed;
     }
 
     .success {
@@ -139,11 +140,14 @@
       font-weight: bold;
     }
 
-    .note {
-      margin-top: 12px;
-      font-size: 12px;
-      color: #777;
-      line-height: 1.5;
+    .error {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      background: #ffebee;
+      color: #c62828;
+      border-radius: 8px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -193,25 +197,26 @@
       </div>
 
       <div class="form-group">
+        <label>
+          From / Received From
+          <span class="required">*</span>
+        </label>
+
+        <input
+          type="text"
+          id="from"
+          placeholder="Example: Tahsildar Office"
+          required
+        >
+      </div>
+
+      <div class="form-group">
         <label>Letter Number</label>
 
         <input
           type="text"
           id="letterNo"
           placeholder="Enter letter number"
-        >
-      </div>
-
-      <div class="form-group">
-        <label>
-          From / Received From <span class="required">*</span>
-        </label>
-
-        <input
-          type="text"
-          id="from"
-          placeholder="Example: Taluk Office"
-          required
         >
       </div>
 
@@ -238,6 +243,42 @@
       </div>
 
       <div class="form-group">
+        <label>Delivery Mode</label>
+
+        <select id="deliveryMode">
+
+          <option value="">
+            Select delivery mode
+          </option>
+
+          <option value="Post">
+            Post
+          </option>
+
+          <option value="Registered Post">
+            Registered Post
+          </option>
+
+          <option value="Speed Post">
+            Speed Post
+          </option>
+
+          <option value="Email">
+            Email
+          </option>
+
+          <option value="Hand Delivery">
+            Hand Delivery
+          </option>
+
+          <option value="Other">
+            Other
+          </option>
+
+        </select>
+      </div>
+
+      <div class="form-group">
         <label>Remarks</label>
 
         <textarea
@@ -256,18 +297,25 @@
         >
       </div>
 
-      <button type="submit" class="save-btn">
+      <button
+        type="submit"
+        class="save-btn"
+        id="saveBtn"
+      >
         💾 Save Inward
       </button>
 
-      <div id="successMessage" class="success">
-        Inward entry saved successfully!
+      <div
+        id="successMessage"
+        class="success"
+      >
+        Inward record saved successfully!
       </div>
 
-      <div class="note">
-        Note: ಈಗ entry registerRecordsನಲ್ಲಿ save ಆಗುತ್ತದೆ.
-        ಮುಂದಿನ ಹಂತದಲ್ಲಿ document ಅನ್ನು server/databaseಗೆ upload ಮಾಡುವ ವ್ಯವಸ್ಥೆ ಸೇರಿಸಲಾಗುತ್ತದೆ.
-      </div>
+      <div
+        id="errorMessage"
+        class="error"
+      ></div>
 
     </form>
 
@@ -275,171 +323,314 @@
 
 </div>
 
+
 <script>
 
-  // Login protection
-  if (localStorage.getItem("loggedIn") !== "true") {
-    window.location.href = "index.html";
-  }
+  /*
+    SUPABASE CONFIGURATION
+
+    Replace ONLY SUPABASE_ANON_KEY
+    with your Supabase Publishable/Anon key.
+
+    Do NOT use service_role/secret key.
+  */
+
+  const SUPABASE_URL =
+    "https://hmexumitktsxswcqdeef.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
 
 
-  // Today's date
   const today =
-    new Date().toISOString().split("T")[0];
+    new Date()
+      .toISOString()
+      .split("T")[0];
 
-  document.getElementById("date").value = today;
+
+  document.getElementById("date").value =
+    today;
 
 
-  // Get existing records
-  function getRecords() {
+  /*
+    Get records from Supabase
+  */
 
-    return JSON.parse(
-      localStorage.getItem("registerRecords") || "[]"
+  async function getRecords() {
+
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/register_records?select=*",
+      {
+        method: "GET",
+
+        headers: {
+          "apikey":
+            SUPABASE_ANON_KEY,
+
+          "Authorization":
+            "Bearer " +
+            SUPABASE_ANON_KEY
+        }
+      }
     );
 
-  }
 
+    if (!response.ok) {
 
-  // Generate next Inward number
-  function getNextInwardNumber() {
-
-    const records = getRecords();
-
-    const inwardRecords =
-      records.filter(
-        record => record.type === "inward"
+      throw new Error(
+        "Could not load records from Supabase."
       );
 
-    const nextNumber =
-      inwardRecords.length + 1;
+    }
 
-    return "IN-" +
-      String(nextNumber).padStart(3, "0");
+
+    return await response.json();
 
   }
 
 
-  // Show number when page opens
-  document.getElementById("inwardNo").value =
-    getNextInwardNumber();
+  /*
+    Generate next Inward number
+  */
+
+  async function getNextInwardNumber() {
+
+    try {
+
+      const records =
+        await getRecords();
 
 
-  // Save Inward
-  document.getElementById("inwardForm")
-    .addEventListener("submit", function(event) {
+      const inwardRecords =
+        records.filter(
+          record =>
+            String(record.type)
+              .toLowerCase()
+              === "inward"
+        );
+
+
+      const nextNumber =
+        inwardRecords.length + 1;
+
+
+      return "IN-" +
+        String(nextNumber)
+          .padStart(3, "0");
+
+    }
+
+    catch (error) {
+
+      return "IN-001";
+
+    }
+
+  }
+
+
+  /*
+    Set initial number
+  */
+
+  getNextInwardNumber()
+    .then(function(number) {
+
+      document.getElementById(
+        "inwardNo"
+      ).value = number;
+
+    });
+
+
+  /*
+    Save Inward to Supabase
+  */
+
+  document.getElementById(
+    "inwardForm"
+  ).addEventListener(
+    "submit",
+    async function(event) {
 
       event.preventDefault();
 
 
-      const records = getRecords();
+      const saveBtn =
+        document.getElementById(
+          "saveBtn"
+        );
 
 
-      const record = {
-
-        id:
-          Date.now().toString(),
-
-        type:
-          "inward",
-
-        number:
-          document.getElementById("inwardNo").value,
-
-        date:
-          document.getElementById("date").value,
-
-        letterNo:
-          document.getElementById("letterNo").value.trim(),
-
-        name:
-          document.getElementById("from").value.trim(),
-
-        subject:
-          document.getElementById("subject").value.trim(),
-
-        person:
-          document.getElementById("receivedBy").value.trim(),
-
-        delivery:
-          "",
-
-        remarks:
-          document.getElementById("remarks").value.trim(),
-
-        createdAt:
-          new Date().toISOString()
-
-      };
-
-
-      // Add new record
-      records.push(record);
-
-
-      // Save all records
-      localStorage.setItem(
-        "registerRecords",
-        JSON.stringify(records)
-      );
-
-
-      // Update counters
-      const totalInward =
-        records.filter(
-          r => r.type === "inward"
-        ).length;
-
-      const todayInward =
-        records.filter(
-          r =>
-            r.type === "inward" &&
-            r.date === today
-        ).length;
-
-
-      localStorage.setItem(
-        "totalInward",
-        totalInward
-      );
-
-      localStorage.setItem(
-        "todayInward",
-        todayInward
-      );
-
-
-      // Success message
-      document.getElementById(
-        "successMessage"
-      ).style.display = "block";
-
-
-      // Reset form
-      document.getElementById(
-        "inwardForm"
-      ).reset();
-
-
-      // Set today's date again
-      document.getElementById(
-        "date"
-      ).value = today;
-
-
-      // Generate next number
-      document.getElementById(
-        "inwardNo"
-      ).value = getNextInwardNumber();
-
-
-      // Hide success after 3 seconds
-      setTimeout(function() {
-
+      const success =
         document.getElementById(
           "successMessage"
-        ).style.display = "none";
+        );
 
-      }, 3000);
+
+      const errorBox =
+        document.getElementById(
+          "errorMessage"
+        );
+
+
+      success.style.display =
+        "none";
+
+      errorBox.style.display =
+        "none";
+
+
+      saveBtn.disabled =
+        true;
+
+      saveBtn.textContent =
+        "Saving...";
+
+
+      try {
+
+        const record = {
+
+          type:
+            "Inward",
+
+          number:
+            document.getElementById(
+              "inwardNo"
+            ).value,
+
+          date:
+            document.getElementById(
+              "date"
+            ).value,
+
+          name:
+            document.getElementById(
+              "from"
+            ).value.trim(),
+
+          letter_no:
+            document.getElementById(
+              "letterNo"
+            ).value.trim(),
+
+          subject:
+            document.getElementById(
+              "subject"
+            ).value.trim(),
+
+          person:
+            document.getElementById(
+              "receivedBy"
+            ).value.trim(),
+
+          delivery:
+            document.getElementById(
+              "deliveryMode"
+            ).value
+
+        };
+
+
+        const response =
+          await fetch(
+
+            SUPABASE_URL +
+            "/rest/v1/register_records",
+
+            {
+
+              method: "POST",
+
+              headers: {
+
+                "Content-Type":
+                  "application/json",
+
+                "apikey":
+                  SUPABASE_ANON_KEY,
+
+                "Authorization":
+                  "Bearer " +
+                  SUPABASE_ANON_KEY,
+
+                "Prefer":
+                  "return=representation"
+
+              },
+
+              body:
+                JSON.stringify(record)
+
+            }
+
+          );
+
+
+        if (!response.ok) {
+
+          const message =
+            await response.text();
+
+          throw new Error(
+            message
+          );
+
+        }
+
+
+        success.style.display =
+          "block";
+
+
+        document.getElementById(
+          "inwardForm"
+        ).reset();
+
+
+        document.getElementById(
+          "date"
+        ).value =
+          today;
+
+
+        const nextNumber =
+          await getNextInwardNumber();
+
+
+        document.getElementById(
+          "inwardNo"
+        ).value =
+          nextNumber;
+
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+
+        errorBox.textContent =
+          "Save failed. Please check Supabase connection and key.";
+
+        errorBox.style.display =
+          "block";
+
+      }
+
+
+      finally {
+
+        saveBtn.disabled =
+          false;
+
+        saveBtn.textContent =
+          "💾 Save Inward";
+
+      }
 
     });
 
@@ -447,4 +638,3 @@
 
 </body>
 </html>
-```
