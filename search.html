@@ -1,5 +1,4 @@
 <script>
-
 const SUPABASE_URL =
   "https://hmexumitktsxswcqdeef.supabase.co";
 
@@ -8,376 +7,220 @@ const SUPABASE_ANON_KEY =
 
 let allRecords = [];
 
-
-/* ================================
-   LOAD RECORDS
-================================ */
-
 async function loadRecords() {
+  const loading = document.getElementById("loading");
+  const errorBox = document.getElementById("error");
+  const successBox = document.getElementById("success");
+  const results = document.getElementById("results");
 
-  const loading =
-    document.getElementById("loading");
-
-  const errorBox =
-    document.getElementById("error");
-
-  const successBox =
-    document.getElementById("success");
-
-  const results =
-    document.getElementById("results");
-
-  loading.style.display = "block";
-  errorBox.style.display = "none";
-  successBox.style.display = "none";
-
-  results.innerHTML = `
-    <tr>
-      <td colspan="8" class="no-records">
-        Loading records...
-      </td>
-    </tr>
-  `;
+  if (loading) loading.style.display = "block";
+  if (errorBox) errorBox.style.display = "none";
+  if (successBox) successBox.style.display = "none";
 
   try {
-
-    const url =
-      SUPABASE_URL +
-      "/rest/v1/register_records?select=*";
-
-    console.log("GET URL:", url);
-
     const response = await fetch(
-      url,
+      SUPABASE_URL + "/rest/v1/register_records?select=*",
       {
         method: "GET",
-
         headers: {
           "apikey": SUPABASE_ANON_KEY,
-          "Authorization":
-            "Bearer " + SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
           "Accept": "application/json"
         }
       }
     );
 
-    const text =
-      await response.text();
-
-    console.log(
-      "Supabase response:",
-      response.status,
-      text
-    );
+    const text = await response.text();
 
     if (!response.ok) {
-
       throw new Error(
-        "Supabase GET " +
-        response.status +
-        ": " +
-        text
+        "Supabase GET " + response.status + ": " + text
       );
     }
 
-    allRecords =
-      text ? JSON.parse(text) : [];
+    allRecords = text ? JSON.parse(text) : [];
 
-    /* Newest first */
     allRecords.sort(function(a, b) {
-
-      return new Date(
-        b.created_at || 0
-      ) - new Date(
-        a.created_at || 0
-      );
-
+      return new Date(b.created_at || 0) -
+             new Date(a.created_at || 0);
     });
 
     displayRecords(allRecords);
 
-    successBox.textContent =
-      "✅ " +
-      allRecords.length +
-      " records loaded successfully.";
+    if (successBox) {
+      successBox.textContent =
+        "✅ " + allRecords.length +
+        " records loaded successfully.";
+      successBox.style.display = "block";
+    }
 
-    successBox.style.display = "block";
+  } catch (error) {
+    console.error("SEARCH ERROR:", error);
 
-  }
+    if (errorBox) {
+      errorBox.textContent =
+        "❌ Records load ಆಗಲಿಲ್ಲ.\n\n" +
+        error.message;
+      errorBox.style.display = "block";
+    }
 
-  catch (error) {
+    if (results) {
+      results.innerHTML = `
+        <tr>
+          <td colspan="8" class="no-records">
+            Records load ಆಗಲಿಲ್ಲ.
+          </td>
+        </tr>
+      `;
+    }
 
-    console.error(
-      "SEARCH ERROR:",
-      error
-    );
-
-    errorBox.textContent =
-      "❌ Records load ಆಗಲಿಲ್ಲ.\n\n" +
-      error.message;
-
-    errorBox.style.display = "block";
-
-    results.innerHTML = `
-      <tr>
-        <td colspan="8" class="no-records">
-          Records load ಆಗಲಿಲ್ಲ.
-        </td>
-      </tr>
-    `;
-  }
-
-  finally {
-
-    loading.style.display = "none";
-
+  } finally {
+    if (loading) loading.style.display = "none";
   }
 }
 
 
-/* ================================
-   GET FIELD
-================================ */
-
 function getLetterNumber(record) {
-
   return (
     record["Letter _no"] ??
     record["Letter_no"] ??
     record["letter_no"] ??
     record["Letter No"] ??
-    record["letter number"] ??
     ""
   );
 }
 
 
 function getName(record) {
-
-  return (
-    record.name ??
-    record.Name ??
-    ""
-  );
+  return record.name ?? record.Name ?? "";
 }
 
 
-/* ================================
-   SEARCH
-================================ */
-
 function searchRecords() {
-
   const type =
-    document.getElementById("type")
-      .value
-      .trim()
-      .toLowerCase();
+    document.getElementById("type").value.trim().toLowerCase();
 
   const number =
-    document.getElementById("number")
-      .value
-      .trim()
-      .toLowerCase();
+    document.getElementById("number").value.trim().toLowerCase();
 
   const name =
-    document.getElementById("name")
-      .value
-      .trim()
-      .toLowerCase();
+    document.getElementById("name").value.trim().toLowerCase();
 
   const letterNo =
-    document.getElementById("letterNo")
-      .value
-      .trim()
-      .toLowerCase();
+    document.getElementById("letterNo").value.trim().toLowerCase();
 
   const subject =
-    document.getElementById("subject")
-      .value
-      .trim()
-      .toLowerCase();
+    document.getElementById("subject").value.trim().toLowerCase();
 
   const date =
-    document.getElementById("date")
-      .value;
+    document.getElementById("date").value;
 
+  const filtered = allRecords.filter(function(record) {
 
-  const filtered =
-    allRecords.filter(function(record) {
+    const recordType =
+      String(record.type || "").toLowerCase();
 
-      const recordType =
-        String(
-          record.type || ""
-        ).toLowerCase();
+    const recordNumber =
+      String(record.number || "").toLowerCase();
 
-      const recordNumber =
-        String(
-          record.number || ""
-        ).toLowerCase();
+    const recordName =
+      String(getName(record)).toLowerCase();
 
-      const recordName =
-        String(
-          getName(record)
-        ).toLowerCase();
+    const recordLetter =
+      String(getLetterNumber(record)).toLowerCase();
 
-      const recordLetter =
-        String(
-          getLetterNumber(record)
-        ).toLowerCase();
+    const recordSubject =
+      String(record.subject || "").toLowerCase();
 
-      const recordSubject =
-        String(
-          record.subject || ""
-        ).toLowerCase();
+    const recordDate =
+      String(record.date || "");
 
-      const recordDate =
-        String(
-          record.date || ""
-        );
-
-
-      return (
-
-        (!type ||
-          recordType === type)
-
-        &&
-
-        (!number ||
-          recordNumber.includes(number))
-
-        &&
-
-        (!name ||
-          recordName.includes(name))
-
-        &&
-
-        (!letterNo ||
-          recordLetter.includes(letterNo))
-
-        &&
-
-        (!subject ||
-          recordSubject.includes(subject))
-
-        &&
-
-        (!date ||
-          recordDate === date)
-
-      );
-
-    });
-
+    return (
+      (!type || recordType === type) &&
+      (!number || recordNumber.includes(number)) &&
+      (!name || recordName.includes(name)) &&
+      (!letterNo || recordLetter.includes(letterNo)) &&
+      (!subject || recordSubject.includes(subject)) &&
+      (!date || recordDate === date)
+    );
+  });
 
   displayRecords(filtered);
 }
 
 
-/* ================================
-   DISPLAY
-================================ */
-
 function displayRecords(records) {
+  const tbody = document.getElementById("results");
+  const count = document.getElementById("count");
 
-  const tbody =
-    document.getElementById("results");
-
-  const count =
-    document.getElementById("count");
-
+  if (!tbody || !count) return;
 
   count.textContent =
-    "(" +
-    records.length +
-    " records)";
-
+    "(" + records.length + " records)";
 
   if (!records.length) {
-
     tbody.innerHTML = `
       <tr>
-        <td
-          colspan="8"
-          class="no-records"
-        >
+        <td colspan="8" class="no-records">
           No records found
         </td>
       </tr>
     `;
-
     return;
   }
 
+  tbody.innerHTML = records.map(function(record) {
 
-  tbody.innerHTML =
-    records.map(function(record) {
+    const type =
+      String(record.type || "");
 
-      const type =
-        String(
-          record.type || ""
-        );
+    const typeClass =
+      type.toLowerCase() === "inward"
+        ? "inward"
+        : "outward";
 
-      const typeClass =
-        type.toLowerCase() === "inward"
-          ? "inward"
-          : "outward";
+    return `
+      <tr>
+        <td class="${typeClass}">
+          ${escapeHTML(type)}
+        </td>
 
+        <td>
+          ${escapeHTML(record.number)}
+        </td>
 
-      return `
-        <tr>
+        <td>
+          ${escapeHTML(record.date)}
+        </td>
 
-          <td class="${typeClass}">
-            ${escapeHTML(type)}
-          </td>
+        <td>
+          ${escapeHTML(getName(record))}
+        </td>
 
-          <td>
-            ${escapeHTML(record.number)}
-          </td>
+        <td>
+          ${escapeHTML(getLetterNumber(record))}
+        </td>
 
-          <td>
-            ${escapeHTML(record.date)}
-          </td>
+        <td>
+          ${escapeHTML(record.subject)}
+        </td>
 
-          <td>
-            ${escapeHTML(getName(record))}
-          </td>
+        <td>
+          ${escapeHTML(record.person)}
+        </td>
 
-          <td>
-            ${escapeHTML(getLetterNumber(record))}
-          </td>
+        <td>
+          ${escapeHTML(record.delivery)}
+        </td>
+      </tr>
+    `;
 
-          <td>
-            ${escapeHTML(record.subject)}
-          </td>
-
-          <td>
-            ${escapeHTML(record.person)}
-          </td>
-
-          <td>
-            ${escapeHTML(record.delivery)}
-          </td>
-
-        </tr>
-      `;
-
-    }).join("");
+  }).join("");
 }
 
 
-/* ================================
-   ESCAPE HTML
-================================ */
-
 function escapeHTML(value) {
-
-  if (
-    value === null ||
-    value === undefined
-  ) {
+  if (value === null || value === undefined) {
     return "";
   }
 
@@ -390,12 +233,7 @@ function escapeHTML(value) {
 }
 
 
-/* ================================
-   CLEAR
-================================ */
-
 function clearSearch() {
-
   document.getElementById("type").value = "";
   document.getElementById("number").value = "";
   document.getElementById("name").value = "";
@@ -403,25 +241,14 @@ function clearSearch() {
   document.getElementById("subject").value = "";
   document.getElementById("date").value = "";
 
-  document.getElementById("error").style.display =
-    "none";
-
-  document.getElementById("success").style.display =
-    "none";
+  document.getElementById("error").style.display = "none";
+  document.getElementById("success").style.display = "none";
 
   displayRecords(allRecords);
 }
 
 
-/* ================================
-   PAGE OPEN
-================================ */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function() {
-    loadRecords();
-  }
-);
-
+document.addEventListener("DOMContentLoaded", function() {
+  loadRecords();
+});
 </script>
