@@ -1,7 +1,136 @@
-<div id="loading"></div>
-<div id="success"></div>
-<div id="error"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Register - Hanawal Gram Panchayat</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f4f7f4;min-height:100vh}
+header{background:#37474f;color:white;padding:16px 20px}
+header h1{font-size:20px} header p{font-size:13px;margin-top:4px}
+.container{max-width:1100px;margin:auto;padding:20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}
+.top h2{color:#333}.back-btn{text-decoration:none;background:#555;color:white;padding:9px 14px;border-radius:7px;font-size:14px}
+.search-box{background:white;padding:20px;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.08);margin-bottom:20px}
+.search-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.field label{display:block;font-weight:bold;font-size:13px;margin-bottom:6px;color:#333}
+input,select{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;font-size:14px;outline:none}
+input:focus,select:focus{border-color:#37474f}
+.buttons{display:flex;gap:10px;margin-top:15px} button{border:none;border-radius:8px;padding:11px 18px;font-size:14px;font-weight:bold;cursor:pointer}
+.search-btn{background:#37474f;color:white}.clear-btn{background:#e0e0e0;color:#333}
+.status{margin:15px 0;padding:12px;border-radius:8px;display:none;white-space:pre-wrap;word-break:break-word}
+.error{background:#ffebee;color:#c62828}.loading{background:#e3f2fd;color:#1565c0}.success{background:#e8f5e9;color:#2e7d32}
+.result-box{background:white;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.08);overflow-x:auto}
+.result-header{padding:15px 18px;border-bottom:1px solid #ddd;font-weight:bold}
+table{width:100%;border-collapse:collapse;min-width:950px} th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px}
+th{background:#f5f5f5}.inward{color:#1565c0;font-weight:bold}.outward{color:#ef6c00;font-weight:bold}
+.no-records{text-align:center;padding:30px;color:#777}.count{color:#555;font-size:13px;font-weight:normal}
+@media(max-width:700px){.search-grid{grid-template-columns:1fr}.top{align-items:flex-start}.buttons{flex-direction:column}button{width:100%}}
+</style>
+</head>
+<body>
+<header><h1>Hanawal Gram Panchayat</h1><p>Inward &amp; Outward Register</p></header>
+<div class="container">
+<div class="top"><h2>🔎 Search Register</h2><a href="dashboard.html" class="back-btn">← Dashboard</a></div>
+<div class="search-box">
+<div class="search-grid">
+<div class="field"><label>Register Type</label><select id="type"><option value="">All</option><option value="Inward">Inward</option><option value="Outward">Outward</option></select></div>
+<div class="field"><label>Number</label><input type="text" id="number" placeholder="IN-001 / OUT-001"></div>
+<div class="field"><label>Name / From / To</label><input type="text" id="name" placeholder="Search name"></div>
+<div class="field"><label>Letter Number</label><input type="text" id="letterNo" placeholder="Search letter number"></div>
+<div class="field"><label>Subject</label><input type="text" id="subject" placeholder="Search subject"></div>
+<div class="field"><label>Date</label><input type="date" id="date"></div>
+</div>
+<div class="buttons"><button type="button" class="search-btn" onclick="searchRecords()">🔎 Search</button><button type="button" class="clear-btn" onclick="clearSearch()">Clear</button></div>
+</div>
+<div id="loading" class="status loading">Loading records...</div>
+<div id="success" class="status success"></div>
+<div id="error" class="status error"></div>
+<div class="result-box">
+<div class="result-header">Search Results <span id="count" class="count">(0 records)</span></div>
+<table><thead><tr><th>Type</th><th>Number</th><th>Date</th><th>Name / From / To</th><th>Letter No.</th><th>Subject</th><th>Person</th><th>Delivery</th></tr></thead>
+<tbody id="results"><tr><td colspan="8" class="no-records">Loading records...</td></tr></tbody></table>
+</div>
+</div>
+<script>
+const SUPABASE_URL = "https://hmexumitktsxswcqdeef.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
+let allRecords = [];
 
-<span id="count">(0 records)</span>
+async function loadRecords(){
+  const loading=document.getElementById("loading"), errorBox=document.getElementById("error"), successBox=document.getElementById("success");
+  loading.style.display="block"; errorBox.style.display="none"; successBox.style.display="none";
+  try{
+    const response=await fetch(SUPABASE_URL+"/rest/v1/register_records?select=*",{
+      method:"GET",
+      headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+SUPABASE_ANON_KEY,"Accept":"application/json"}
+    });
+    const text=await response.text();
+    if(!response.ok) throw new Error("Supabase GET "+response.status+": "+text);
+    allRecords=text?JSON.parse(text):[];
+    allRecords.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+    displayRecords(allRecords);
+    successBox.textContent="✅ "+allRecords.length+" records loaded successfully.";
+    successBox.style.display="block";
+  }catch(error){
+    console.error("SEARCH ERROR:",error);
+    errorBox.textContent="❌ Records load ಆಗಲಿಲ್ಲ.\n\n"+error.message;
+    errorBox.style.display="block";
+    document.getElementById("results").innerHTML='<tr><td colspan="8" class="no-records">Records load ಆಗಲಿಲ್ಲ.</td></tr>';
+  }finally{loading.style.display="none";}
+}
 
-<tbody id="results"></tbody>
+function getLetterNumber(record){
+  return record["Letter _no"] ?? record["Letter_no"] ?? record["letter_no"] ?? record["Letter No"] ?? "";
+}
+function getName(record){return record.name ?? record.Name ?? "";}
+
+function searchRecords(){
+  const type=document.getElementById("type").value.trim().toLowerCase();
+  const number=document.getElementById("number").value.trim().toLowerCase();
+  const name=document.getElementById("name").value.trim().toLowerCase();
+  const letterNo=document.getElementById("letterNo").value.trim().toLowerCase();
+  const subject=document.getElementById("subject").value.trim().toLowerCase();
+  const date=document.getElementById("date").value;
+  const filtered=allRecords.filter(record=>{
+    const recordType=String(record.type||"").toLowerCase();
+    const recordNumber=String(record.number||"").toLowerCase();
+    const recordName=String(getName(record)).toLowerCase();
+    const recordLetter=String(getLetterNumber(record)).toLowerCase();
+    const recordSubject=String(record.subject||"").toLowerCase();
+    const recordDate=String(record.date||"");
+    return (!type||recordType===type)&&(!number||recordNumber.includes(number))&&(!name||recordName.includes(name))&&(!letterNo||recordLetter.includes(letterNo))&&(!subject||recordSubject.includes(subject))&&(!date||recordDate===date);
+  });
+  displayRecords(filtered);
+}
+
+function displayRecords(records){
+  const tbody=document.getElementById("results"), count=document.getElementById("count");
+  count.textContent="("+records.length+" records)";
+  if(!records.length){tbody.innerHTML='<tr><td colspan="8" class="no-records">No records found</td></tr>';return;}
+  tbody.innerHTML=records.map(record=>{
+    const type=String(record.type||""), typeClass=type.toLowerCase()==="inward"?"inward":"outward";
+    return `<tr><td class="${typeClass}">${escapeHTML(type)}</td><td>${escapeHTML(record.number)}</td><td>${escapeHTML(record.date)}</td><td>${escapeHTML(getName(record))}</td><td>${escapeHTML(getLetterNumber(record))}</td><td>${escapeHTML(record.subject)}</td><td>${escapeHTML(record.person)}</td><td>${escapeHTML(record.delivery)}</td></tr>`;
+  }).join("");
+}
+
+function escapeHTML(value){
+  if(value===null||value===undefined)return "";
+  return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function clearSearch(){
+  document.getElementById("type").value="";
+  document.getElementById("number").value="";
+  document.getElementById("name").value="";
+  document.getElementById("letterNo").value="";
+  document.getElementById("subject").value="";
+  document.getElementById("date").value="";
+  document.getElementById("error").style.display="none";
+  document.getElementById("success").style.display="none";
+  displayRecords(allRecords);
+}
+document.addEventListener("DOMContentLoaded",loadRecords);
+</script>
+</body>
+</html>
