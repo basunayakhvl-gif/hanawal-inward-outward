@@ -1,11 +1,219 @@
-catch (error) {
+<script>
 
-  console.error("OUTWARD ERROR:", error);
+const SUPABASE_URL =
+  "https://hmexumitktsxswcqdeef.supabase.co";
 
-  errorBox.textContent =
-    "Save failed: " +
-    (error.message || error);
+const SUPABASE_ANON_KEY =
+  "sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
 
-  errorBox.style.display = "block";
+const today =
+  new Date().toISOString().split("T")[0];
 
+document.getElementById("date").value = today;
+
+
+/* Get existing records */
+async function getRecords() {
+
+  const response = await fetch(
+    SUPABASE_URL +
+    "/rest/v1/register_records?select=id,type,number,date",
+    {
+      method: "GET",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+      }
+    }
+  );
+
+  const text = await response.text();
+
+  if (!response.ok) {
+    throw new Error(
+      "Supabase GET " +
+      response.status +
+      ": " +
+      text
+    );
+  }
+
+  return text ? JSON.parse(text) : [];
 }
+
+
+/* Next Outward Number */
+async function getNextOutwardNumber() {
+
+  try {
+
+    const records = await getRecords();
+
+    const outwardRecords = records.filter(
+      r =>
+        String(r.type || "").toLowerCase() === "outward"
+    );
+
+    return "OUT-" +
+      String(outwardRecords.length + 1).padStart(3, "0");
+
+  } catch (error) {
+
+    console.error(error);
+
+    return "OUT-001";
+  }
+}
+
+
+/* Load first number */
+getNextOutwardNumber().then(number => {
+
+  document.getElementById("outwardNo").value = number;
+
+});
+
+
+/* Save Outward */
+document.getElementById("outwardForm")
+.addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  const saveBtn =
+    document.getElementById("saveBtn");
+
+  const success =
+    document.getElementById("successMessage");
+
+  const errorBox =
+    document.getElementById("errorMessage");
+
+  success.style.display = "none";
+  errorBox.style.display = "none";
+
+  saveBtn.disabled = true;
+  saveBtn.textContent = "Saving...";
+
+  try {
+
+    const record = {
+
+      type: "Outward",
+
+      number:
+        document.getElementById("outwardNo").value,
+
+      date:
+        document.getElementById("date").value,
+
+      name:
+        document.getElementById("to").value.trim(),
+
+      letter_no:
+        document.getElementById("letterNo").value.trim(),
+
+      subject:
+        document.getElementById("subject").value.trim(),
+
+      person:
+        document.getElementById("sentBy").value.trim(),
+
+      delivery:
+        document.getElementById("deliveryMode").value
+
+    };
+
+
+    console.log("Sending Outward:", record);
+
+
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/register_records",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Prefer": "return=representation"
+        },
+
+        body: JSON.stringify(record)
+      }
+    );
+
+
+    const responseText =
+      await response.text();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Supabase POST " +
+        response.status +
+        ": " +
+        responseText
+      );
+
+    }
+
+
+    console.log(
+      "Outward saved:",
+      responseText
+    );
+
+
+    success.textContent =
+      "✅ Outward record saved successfully!";
+
+    success.style.display = "block";
+
+
+    document.getElementById(
+      "outwardForm"
+    ).reset();
+
+
+    document.getElementById(
+      "date"
+    ).value = today;
+
+
+    const nextNumber =
+      await getNextOutwardNumber();
+
+
+    document.getElementById(
+      "outwardNo"
+    ).value = nextNumber;
+
+
+  } catch (error) {
+
+    console.error(
+      "OUTWARD SAVE ERROR:",
+      error
+    );
+
+    errorBox.textContent =
+      "❌ " + error.message;
+
+    errorBox.style.display = "block";
+
+  } finally {
+
+    saveBtn.disabled = false;
+
+    saveBtn.textContent =
+      "💾 Save Outward";
+
+  }
+
+});
+
+</script>
