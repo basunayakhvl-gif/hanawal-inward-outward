@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hanawal Gram Panchayat - Reports</title>
+<title>Reports - Hanawal Gram Panchayat</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#f4f7f4;min-height:100vh;color:#333}
@@ -19,26 +19,45 @@ header p{font-size:13px;margin-top:4px}
 .error{background:#ffebee;color:#c62828}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
 .card{background:#fff;border-radius:14px;padding:20px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.08)}
-.icon{font-size:28px}.card h3{font-size:14px;color:#666;margin:7px 0}
+.icon{font-size:28px}
+.card h3{font-size:14px;color:#666;margin:7px 0}
 .num{font-size:30px;font-weight:bold;color:#00838f}
 .filter{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 12px rgba(0,0,0,.08);margin-bottom:20px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
 select,input{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;font-size:14px}
-.buttons{display:flex;gap:10px;margin-top:15px}
+.buttons{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap}
 button{border:0;border-radius:8px;padding:11px 18px;font-weight:bold;cursor:pointer}
-.apply{background:#00838f;color:#fff}.clear{background:#e0e0e0}.print{background:#37474f;color:#fff}
+.apply{background:#00838f;color:#fff}
+.clear{background:#e0e0e0;color:#333}
+.print{background:#37474f;color:#fff}
 .tablebox{background:#fff;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.08);overflow-x:auto}
 .title{padding:15px 18px;border-bottom:1px solid #ddd;font-weight:bold}
 table{width:100%;border-collapse:collapse;min-width:900px}
 th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px}
-th{background:#f5f5f5}.inward{color:#1565c0;font-weight:bold}.outward{color:#ef6c00;font-weight:bold}
+th{background:#f5f5f5}
+.inward{color:#1565c0;font-weight:bold}
+.outward{color:#ef6c00;font-weight:bold}
 .empty{text-align:center;padding:30px;color:#777}
-@media(max-width:700px){.cards{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.buttons{flex-direction:column}button{width:100%}}
+.print-header{display:none}
+@media(max-width:700px){
+.cards{grid-template-columns:1fr 1fr}
+.grid{grid-template-columns:1fr}
+.buttons{flex-direction:column}
+button{width:100%}
+}
 @media(max-width:430px){.cards{grid-template-columns:1fr}}
-@media print{header,.top,.filter,.status{display:none!important}.container{padding:0}.tablebox{box-shadow:none}}
+@media print{
+header,.top,.filter,.status{display:none!important}
+.container{padding:0;max-width:none}
+.tablebox{box-shadow:none}
+.print-header{display:block;text-align:center;margin-bottom:15px}
+.print-header h1{font-size:20px}
+.print-header p{font-size:13px;margin-top:5px}
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -47,6 +66,12 @@ th{background:#f5f5f5}.inward{color:#1565c0;font-weight:bold}.outward{color:#ef6
 </header>
 
 <div class="container">
+
+<div class="print-header">
+<h1>Hanawal Gram Panchayat</h1>
+<p>Inward &amp; Outward Register - Reports</p>
+<p id="printDate"></p>
+</div>
 
 <div class="top">
 <h2>📊 Reports</h2>
@@ -58,13 +83,28 @@ th{background:#f5f5f5}.inward{color:#1565c0;font-weight:bold}.outward{color:#ef6
 <div id="error" class="status error"></div>
 
 <div class="cards">
-<div class="card"><div class="icon">📋</div><h3>Total Records</h3><div id="total" class="num">0</div></div>
-<div class="card"><div class="icon">📥</div><h3>Total Inward</h3><div id="inward" class="num">0</div></div>
-<div class="card"><div class="icon">📤</div><h3>Total Outward</h3><div id="outward" class="num">0</div></div>
+<div class="card">
+<div class="icon">📋</div>
+<h3>Total Records</h3>
+<div id="total" class="num">0</div>
+</div>
+
+<div class="card">
+<div class="icon">📥</div>
+<h3>Total Inward</h3>
+<div id="inward" class="num">0</div>
+</div>
+
+<div class="card">
+<div class="icon">📤</div>
+<h3>Total Outward</h3>
+<div id="outward" class="num">0</div>
+</div>
 </div>
 
 <div class="filter">
 <div class="grid">
+
 <div>
 <label>Register Type</label>
 <select id="type">
@@ -73,24 +113,33 @@ th{background:#f5f5f5}.inward{color:#1565c0;font-weight:bold}.outward{color:#ef6
 <option value="Outward">Outward</option>
 </select>
 </div>
+
 <div>
 <label>From Date</label>
 <input type="date" id="fromDate">
 </div>
+
 <div>
 <label>To Date</label>
 <input type="date" id="toDate">
 </div>
+
 </div>
+
 <div class="buttons">
 <button class="apply" onclick="applyFilter()">🔎 Apply Filter</button>
 <button class="clear" onclick="clearFilter()">Clear</button>
-<button class="print" onclick="window.print()">🖨️ Print / PDF</button>
+<button class="print" onclick="printReport()">🖨️ Print / PDF</button>
 </div>
 </div>
 
 <div class="tablebox">
-<div class="title">Register Records <span id="count"></span></div>
+
+<div class="title">
+Register Records
+<span id="count">(0 records)</span>
+</div>
+
 <table>
 <thead>
 <tr>
@@ -104,34 +153,54 @@ th{background:#f5f5f5}.inward{color:#1565c0;font-weight:bold}.outward{color:#ef6
 <th>Delivery</th>
 </tr>
 </thead>
+
 <tbody id="results">
-<tr><td colspan="8" class="empty">Loading...</td></tr>
+<tr>
+<td colspan="8" class="empty">Loading...</td>
+</tr>
 </tbody>
 </table>
+
 </div>
 
 </div>
 
 <script>
-const SUPABASE_URL="https://hmexumitktsxswcqdeef.supabase.co";
-const SUPABASE_ANON_KEY="sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
+const SUPABASE_URL =
+"https://hmexumitktsxswcqdeef.supabase.co";
 
-let allRecords=[];
+const SUPABASE_ANON_KEY =
+"sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
 
-function esc(v){
-if(v===null||v===undefined)return "";
-return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+let allRecords = [];
+
+function escapeHTML(value){
+if(value===null || value===undefined) return "";
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 }
 
-function letterNo(r){
-return r["Letter _no"] ?? r["Letter_no"] ?? r["letter_no"] ?? r["Letter No"] ?? r["letter number"] ?? "";
+function getLetterNumber(record){
+return (
+record["Letter _no"] ??
+record["Letter_no"] ??
+record["letter_no"] ??
+record["Letter No"] ??
+record["letter number"] ??
+""
+);
 }
 
-function nameValue(r){
-return r.name ?? r.Name ?? "";
+function getName(record){
+return record.name ?? record.Name ?? "";
 }
 
 async function loadReports(){
+
 const loading=document.getElementById("loading");
 const success=document.getElementById("success");
 const error=document.getElementById("error");
@@ -141,7 +210,11 @@ success.style.display="none";
 error.style.display="none";
 
 try{
-const url=SUPABASE_URL+"/rest/v1/register_records?select=*&order=created_at.desc";
+
+const url =
+SUPABASE_URL +
+"/rest/v1/register_records?select=*&order=created_at.desc";
+
 const response=await fetch(url,{
 method:"GET",
 headers:{
@@ -154,85 +227,179 @@ headers:{
 const text=await response.text();
 
 if(!response.ok){
-throw new Error("Supabase GET "+response.status+": "+text);
+throw new Error(
+"Supabase GET "+response.status+": "+text
+);
 }
 
-allRecords=text?JSON.parse(text):[];
+allRecords=text ? JSON.parse(text) : [];
+
 updateSummary(allRecords);
 displayRecords(allRecords);
 
-success.textContent="✅ "+allRecords.length+" records loaded successfully.";
+success.textContent =
+"✅ "+allRecords.length+
+" records loaded successfully.";
+
 success.style.display="block";
 
-}catch(err){
-console.error("REPORTS ERROR:",err);
-error.textContent="❌ Records load ಆಗಲಿಲ್ಲ.\n\n"+err.message;
-error.style.display="block";
-document.getElementById("results").innerHTML='<tr><td colspan="8" class="empty">Records load ಆಗಲಿಲ್ಲ.</td></tr>';
-}finally{
-loading.style.display="none";
 }
+catch(errorValue){
+
+console.error("REPORTS ERROR:",errorValue);
+
+error.textContent =
+"❌ Records load ಆಗಲಿಲ್ಲ.\n\n"+
+errorValue.message;
+
+error.style.display="block";
+
+document.getElementById("results").innerHTML =
+'<tr><td colspan="8" class="empty">Records load ಆಗಲಿಲ್ಲ.</td></tr>';
+
+}
+finally{
+
+loading.style.display="none";
+
+}
+
 }
 
 function updateSummary(records){
-const inward=records.filter(r=>String(r.type||"").toLowerCase()==="inward").length;
-const outward=records.filter(r=>String(r.type||"").toLowerCase()==="outward").length;
-document.getElementById("total").textContent=records.length;
-document.getElementById("inward").textContent=inward;
-document.getElementById("outward").textContent=outward;
+
+const inward =
+records.filter(r =>
+String(r.type||"").toLowerCase()==="inward"
+).length;
+
+const outward =
+records.filter(r =>
+String(r.type||"").toLowerCase()==="outward"
+).length;
+
+document.getElementById("total").textContent =
+records.length;
+
+document.getElementById("inward").textContent =
+inward;
+
+document.getElementById("outward").textContent =
+outward;
+
 }
 
 function applyFilter(){
-const type=document.getElementById("type").value.toLowerCase();
-const from=document.getElementById("fromDate").value;
-const to=document.getElementById("toDate").value;
 
-const filtered=allRecords.filter(r=>{
-const rt=String(r.type||"").toLowerCase();
-const d=String(r.date||"").substring(0,10);
+const type =
+document.getElementById("type").value.toLowerCase();
 
-return (!type||rt===type) &&
-       (!from||d>=from) &&
-       (!to||d<=to);
+const from =
+document.getElementById("fromDate").value;
+
+const to =
+document.getElementById("toDate").value;
+
+const filtered =
+allRecords.filter(function(record){
+
+const recordType =
+String(record.type||"").toLowerCase();
+
+const recordDate =
+String(record.date||"").substring(0,10);
+
+return (
+(!type || recordType===type) &&
+(!from || recordDate>=from) &&
+(!to || recordDate<=to)
+);
+
 });
 
 displayRecords(filtered);
+
 }
 
 function clearFilter(){
+
 document.getElementById("type").value="";
 document.getElementById("fromDate").value="";
 document.getElementById("toDate").value="";
+
 displayRecords(allRecords);
+
 }
 
 function displayRecords(records){
-const tbody=document.getElementById("results");
-document.getElementById("count").textContent=" ("+records.length+" records)";
+
+const tbody =
+document.getElementById("results");
+
+document.getElementById("count").textContent =
+"("+records.length+" records)";
 
 if(!records.length){
-tbody.innerHTML='<tr><td colspan="8" class="empty">No records found</td></tr>';
+
+tbody.innerHTML =
+'<tr><td colspan="8" class="empty">No records found</td></tr>';
+
 return;
+
 }
 
-tbody.innerHTML=records.map(r=>{
-const type=String(r.type||"");
-const cls=type.toLowerCase()==="inward"?"inward":"outward";
+tbody.innerHTML =
+records.map(function(record){
 
-return `<tr>
-<td class="${cls}">${esc(type)}</td>
-<td>${esc(r.number)}</td>
-<td>${esc(r.date)}</td>
-<td>${esc(nameValue(r))}</td>
-<td>${esc(letterNo(r))}</td>
-<td>${esc(r.subject)}</td>
-<td>${esc(r.person)}</td>
-<td>${esc(r.delivery)}</td>
-</tr>`;
+const type =
+String(record.type||"");
+
+const className =
+type.toLowerCase()==="inward"
+? "inward"
+: "outward";
+
+return `
+<tr>
+<td class="${className}">
+${escapeHTML(type)}
+</td>
+
+<td>${escapeHTML(record.number)}</td>
+
+<td>${escapeHTML(record.date)}</td>
+
+<td>${escapeHTML(getName(record))}</td>
+
+<td>${escapeHTML(getLetterNumber(record))}</td>
+
+<td>${escapeHTML(record.subject)}</td>
+
+<td>${escapeHTML(record.person)}</td>
+
+<td>${escapeHTML(record.delivery)}</td>
+</tr>
+`;
+
 }).join("");
+
 }
 
-document.addEventListener("DOMContentLoaded",loadReports);
+function printReport(){
+
+document.getElementById("printDate").textContent =
+"Printed: "+new Date().toLocaleString();
+
+window.print();
+
+}
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+loadReports();
+}
+);
 </script>
 
 </body>
