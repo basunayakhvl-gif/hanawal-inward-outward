@@ -7,153 +7,124 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#f4f7f4;min-height:100vh}
-header{background:#1565c0;color:#fff;padding:16px 20px}
-header h1{font-size:20px}
-header p{font-size:13px;margin-top:4px}
+header{background:#2e7d32;color:#fff;padding:16px 20px}
+header h1{font-size:20px} header p{font-size:13px;margin-top:4px}
 .container{max-width:800px;margin:auto;padding:20px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:10px}
-.top h2{color:#333}
-.back-btn{text-decoration:none;background:#555;color:#fff;padding:9px 14px;border-radius:7px;font-size:14px}
-.form-box{background:#fff;padding:22px;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.08)}
-.form-group{margin-bottom:16px}
-label{display:block;font-weight:bold;color:#333;margin-bottom:7px;font-size:14px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}
+.top h2{color:#333} .back{text-decoration:none;background:#555;color:#fff;padding:9px 14px;border-radius:7px;font-size:14px}
+.form-box{background:#fff;padding:22px;border-radius:14px;box-shadow:0 3px 12px #0001}
+.group{margin-bottom:16px} label{display:block;font-weight:bold;color:#333;margin-bottom:7px;font-size:14px}
 input,textarea,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:15px;outline:none}
 textarea{min-height:90px;resize:vertical}
 input:focus,textarea:focus,select:focus{border-color:#1565c0}
-.required{color:red}
-.inward-number{background:#e3f2fd;font-weight:bold;color:#1565c0}
-.save-btn{width:100%;padding:14px;background:#1565c0;color:#fff;border:0;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
-.save-btn:disabled{background:#999;cursor:not-allowed}
-.success,.error{display:none;margin-top:15px;padding:12px;border-radius:8px;font-weight:bold}
-.success{background:#e8f5e9;color:#2e7d32;text-align:center}
-.error{background:#ffebee;color:#c62828}
+.required{color:red} .number{background:#e3f2fd;font-weight:bold;color:#1565c0}
+.save{width:100%;padding:14px;background:#2e7d32;color:#fff;border:0;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
+.save:disabled{background:#999;cursor:not-allowed}
+.message{display:none;margin-top:15px;padding:12px;border-radius:8px;text-align:center;font-weight:bold}
+.success{background:#e8f5e9;color:#2e7d32} .error{background:#ffebee;color:#c62828;text-align:left;white-space:pre-wrap;word-break:break-word}
+.file-note{font-size:12px;color:#666;margin-top:5px}
+@media(max-width:600px){.top{align-items:flex-start}}
 </style>
 </head>
 <body>
-
-<header>
-<h1>Hanawal Gram Panchayat</h1>
-<p>Inward &amp; Outward Register</p>
-</header>
-
+<header><h1>Hanawal Gram Panchayat</h1><p>Inward &amp; Outward Register</p></header>
 <div class="container">
-<div class="top">
-<h2>📥 Inward Entry</h2>
-<a href="dashboard.html" class="back-btn">← Dashboard</a>
-</div>
-
+<div class="top"><h2>📥 Inward Entry</h2><a href="dashboard.html" class="back">← Dashboard</a></div>
 <div class="form-box">
-<form id="inwardForm">
-
-<div class="form-group">
-<label>Inward Number</label>
-<input type="text" id="inwardNo" class="inward-number" readonly>
-</div>
-
-<div class="form-group">
-<label>Date <span class="required">*</span></label>
-<input type="date" id="date" required>
-</div>
-
-<div class="form-group">
-<label>From / Received From <span class="required">*</span></label>
-<input type="text" id="from" placeholder="Example: Tahsildar Office" required>
-</div>
-
-<div class="form-group">
-<label>Letter Number</label>
-<input type="text" id="letterNo" placeholder="Enter letter number">
-</div>
-
-<div class="form-group">
-<label>Subject <span class="required">*</span></label>
-<textarea id="subject" placeholder="Enter subject" required></textarea>
-</div>
-
-<div class="form-group">
-<label>Received By</label>
-<input type="text" id="receivedBy" placeholder="Enter name">
-</div>
-
-<div class="form-group">
-<label>Delivery Mode</label>
-<select id="deliveryMode">
-<option value="">Select delivery mode</option>
-<option>Post</option>
-<option>Registered Post</option>
-<option>Speed Post</option>
-<option>Email</option>
-<option>Hand Delivery</option>
-<option>Other</option>
-</select>
-</div>
-
-<div class="form-group">
-<label>Remarks</label>
-<textarea id="remarks" placeholder="Enter remarks"></textarea>
-</div>
-
-<div class="form-group">
-<label>Upload Document</label>
-<input type="file" id="document" accept=".pdf,.jpg,.jpeg,.png">
-</div>
-
-<button type="submit" class="save-btn" id="saveBtn">💾 Save Inward</button>
-<div id="successMessage" class="success">Inward record saved successfully!</div>
-<div id="errorMessage" class="error"></div>
-
+<form id="registerForm">
+<div class="group"><label>Inward Number</label><input id="registerNo" class="number" type="text" readonly></div>
+<div class="group"><label>Date <span class="required">*</span></label><input id="date" type="date" required></div>
+<div class="group"><label>From / Received From <span class="required">*</span></label><input id="from" type="text" placeholder="Example: Taluka Panchayat Gangavathi" required></div>
+<div class="group"><label>Letter / Reference Number</label><input id="letterNo" type="text" placeholder="Enter letter number"></div>
+<div class="group"><label>Subject <span class="required">*</span></label><textarea id="subject" placeholder="Enter subject" required></textarea></div>
+<div class="group"><label>Received By</label><input id="receivedBy" type="text" placeholder="Enter name"></div>
+<div class="group"><label>Delivery Mode</label>
+<select id="deliveryMode"><option value="">Select delivery mode</option><option>Post</option><option>Registered Post</option><option>Speed Post</option><option>Email</option><option>Hand Delivery</option><option>Other</option></select></div>
+<div class="group"><label>Remarks</label><textarea id="remarks" placeholder="Enter remarks"></textarea></div>
+<div class="group"><label>Upload Document</label><input type="file" id="document" accept=".pdf,.jpg,.jpeg,.png"><div class="file-note">PDF, JPG, JPEG, PNG — maximum 50 MB.</div></div>
+<button type="submit" class="save" id="saveBtn">💾 Save Inward</button>
+<div id="successMessage" class="message success"></div>
+<div id="errorMessage" class="message error"></div>
 </form>
 </div>
 </div>
-
 <script>
-/* SUPABASE CONFIGURATION
-   Keep these values inside JavaScript only.
-   Do NOT paste the key anywhere in the visible HTML.
-*/
+
 const SUPABASE_URL = "https://hmexumitktsxswcqdeef.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
+const STORAGE_BUCKET = "documents";
 
-const dateInput = document.getElementById("date");
 const today = new Date().toISOString().split("T")[0];
-dateInput.value = today;
+document.getElementById("date").value = today;
 
 async function getRecords() {
   const response = await fetch(
-    SUPABASE_URL + "/rest/v1/register_records?select=id,type,number",
+    SUPABASE_URL + "/rest/v1/register_records?select=id,type,number,date,created_at",
     {
       headers: {
         "apikey": SUPABASE_ANON_KEY,
-        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "Accept": "application/json"
       }
     }
   );
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error("Supabase GET " + response.status + ": " + text);
-  }
-  return await response.json();
+  const text = await response.text();
+  if (!response.ok) throw new Error("Supabase GET " + response.status + ": " + text);
+  return text ? JSON.parse(text) : [];
 }
 
-async function getNextInwardNumber() {
+async function getNextNumber(type, prefix) {
   try {
     const records = await getRecords();
-    const inwardRecords = records.filter(r =>
-      String(r.type || "").toLowerCase() === "inward"
+    const filtered = records.filter(r =>
+      String(r.type || "").toLowerCase() === type.toLowerCase()
     );
-    return "IN-" + String(inwardRecords.length + 1).padStart(3, "0");
+    let max = 0;
+    filtered.forEach(r => {
+      const m = String(r.number || "").match(new RegExp("^" + prefix + "-(\\d+)$", "i"));
+      if (m) max = Math.max(max, Number(m[1]));
+    });
+    return prefix + "-" + String(max + 1).padStart(3, "0");
   } catch (e) {
     console.error(e);
-    return "IN-001";
+    return prefix + "-001";
   }
 }
 
-getNextInwardNumber().then(n => {
-  document.getElementById("inwardNo").value = n;
-});
+async function uploadDocument(file, number) {
+  if (!file) return { url: "", name: "" };
 
-document.getElementById("inwardForm").addEventListener("submit", async function(event) {
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const path = number + "/" + Date.now() + "_" + safeName;
+
+  const response = await fetch(
+    SUPABASE_URL + "/storage/v1/object/" + STORAGE_BUCKET + "/" +
+    encodeURIComponent(path).replace(/%2F/g, "/"),
+    {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "Content-Type": file.type || "application/octet-stream",
+        "x-upsert": "true"
+      },
+      body: file
+    }
+  );
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error("Document upload " + response.status + ": " + text);
+  }
+
+  return {
+    url: SUPABASE_URL + "/storage/v1/object/public/" +
+         STORAGE_BUCKET + "/" + path.split("/").map(encodeURIComponent).join("/"),
+    name: file.name
+  };
+}
+
+async function saveRecord(event) {
   event.preventDefault();
 
   const saveBtn = document.getElementById("saveBtn");
@@ -166,16 +137,36 @@ document.getElementById("inwardForm").addEventListener("submit", async function(
   saveBtn.textContent = "Saving...";
 
   try {
+    const number = document.getElementById("registerNo").value.trim();
+    const file = document.getElementById("document").files[0];
+
     const record = {
       type: "Inward",
-      number: document.getElementById("inwardNo").value,
+      number: number,
       date: document.getElementById("date").value,
       name: document.getElementById("from").value.trim(),
       letter_no: document.getElementById("letterNo").value.trim(),
       subject: document.getElementById("subject").value.trim(),
       person: document.getElementById("receivedBy").value.trim(),
-      delivery: document.getElementById("deliveryMode").value
+      delivery: document.getElementById("deliveryMode").value,
+      document_url: "",
+      document_name: ""
     };
+
+    if (!record.date || !record.name || !record.subject) {
+      throw new Error("Please fill all required fields.");
+    }
+
+    if (file) {
+      if (file.size > 50 * 1024 * 1024) {
+        throw new Error("Document must be 50 MB or smaller.");
+      }
+      const uploaded = await uploadDocument(file, number);
+      record.document_url = uploaded.url;
+      record.document_name = uploaded.name;
+    }
+
+    console.log("Saving record:", record);
 
     const response = await fetch(
       SUPABASE_URL + "/rest/v1/register_records",
@@ -191,26 +182,41 @@ document.getElementById("inwardForm").addEventListener("submit", async function(
       }
     );
 
+    const text = await response.text();
     if (!response.ok) {
-      const message = await response.text();
-      throw new Error("Supabase POST " + response.status + ": " + message);
+      throw new Error("Supabase POST " + response.status + ": " + text);
     }
 
+    success.textContent = "✅ Inward record saved successfully" +
+      (file ? " with document." : ".");
     success.style.display = "block";
-    document.getElementById("inwardForm").reset();
-    dateInput.value = today;
-    document.getElementById("inwardNo").value = await getNextInwardNumber();
+
+    document.getElementById("registerForm").reset();
+    document.getElementById("date").value = today;
+
+    const next = await getNextNumber("Inward", "IN");
+    document.getElementById("registerNo").value = next;
 
   } catch (error) {
-    console.error("INWARD SAVE ERROR:", error);
-    errorBox.textContent = "Save failed: " + error.message;
+    console.error(error);
+    errorBox.textContent = "❌ Save failed: " + error.message;
     errorBox.style.display = "block";
   } finally {
     saveBtn.disabled = false;
     saveBtn.textContent = "💾 Save Inward";
   }
-});
-</script>
+}
 
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    document.getElementById("registerNo").value =
+      await getNextNumber("Inward", "IN");
+  } catch (e) {
+    document.getElementById("registerNo").value = "IN-001";
+  }
+  document.getElementById("registerForm").addEventListener("submit", saveRecord);
+});
+
+</script>
 </body>
 </html>
