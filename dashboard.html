@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,6 +64,16 @@
 
     .welcome p {
       color: #666;
+    }
+
+    .status {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #ffebee;
+      color: #c62828;
+      font-weight: bold;
     }
 
     .cards {
@@ -160,105 +169,200 @@
 
 <body>
 
-  <header>
-    <div>
-      <h1>Hanawal Gram Panchayat</h1>
-      <p>Inward &amp; Outward Register</p>
+<header>
+  <div>
+    <h1>Hanawal Gram Panchayat</h1>
+    <p>Inward &amp; Outward Register</p>
+  </div>
+
+  <button class="logout-btn" onclick="logout()">
+    Logout
+  </button>
+</header>
+
+<main class="container">
+
+  <div class="welcome">
+    <h2>Dashboard</h2>
+    <p>Welcome to Inward &amp; Outward Register</p>
+  </div>
+
+  <div id="status" class="status"></div>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>Total Inward</h3>
+      <div class="number" id="totalInward">0</div>
     </div>
 
-    <button class="logout-btn" onclick="logout()">
-      Logout
-    </button>
-  </header>
-
-  <main class="container">
-
-    <div class="welcome">
-      <h2>Dashboard</h2>
-      <p>Welcome to Inward &amp; Outward Register</p>
+    <div class="card">
+      <h3>Total Outward</h3>
+      <div class="number" id="totalOutward">0</div>
     </div>
 
-    <div class="cards">
-
-      <div class="card">
-        <h3>Total Inward</h3>
-        <div class="number" id="totalInward">0</div>
-      </div>
-
-      <div class="card">
-        <h3>Total Outward</h3>
-        <div class="number" id="totalOutward">0</div>
-      </div>
-
-      <div class="card">
-        <h3>Today's Inward</h3>
-        <div class="number" id="todayInward">0</div>
-      </div>
-
-      <div class="card">
-        <h3>Today's Outward</h3>
-        <div class="number" id="todayOutward">0</div>
-      </div>
-
+    <div class="card">
+      <h3>Today's Inward</h3>
+      <div class="number" id="todayInward">0</div>
     </div>
 
-    <div class="menu">
-
-      <a href="inward.html">
-        <span class="icon inward">📥</span>
-        New Inward
-      </a>
-
-      <a href="outward.html">
-        <span class="icon outward">📤</span>
-        New Outward
-      </a>
-
-      <a href="search.html">
-        <span class="icon search">🔎</span>
-        Search Register
-      </a>
-
-      <a href="reports.html">
-        <span class="icon reports">📊</span>
-        Reports
-      </a>
-
+    <div class="card">
+      <h3>Today's Outward</h3>
+      <div class="number" id="todayOutward">0</div>
     </div>
 
-  </main>
+  </div>
 
-  <footer>
-    Hanawal Gram Panchayat © 2026
-  </footer>
+  <div class="menu">
 
-  <script>
+    <a href="inward.html">
+      <span class="icon inward">📥</span>
+      New Inward
+    </a>
 
-    // Check login
-    if (localStorage.getItem("loggedIn") !== "true") {
-      window.location.href = "index.html";
+    <a href="outward.html">
+      <span class="icon outward">📤</span>
+      New Outward
+    </a>
+
+    <a href="search.html">
+      <span class="icon search">🔎</span>
+      Search Register
+    </a>
+
+    <a href="reports.html">
+      <span class="icon reports">📊</span>
+      Reports
+    </a>
+
+  </div>
+
+</main>
+
+<footer>
+  Hanawal Gram Panchayat © 2026
+</footer>
+
+<script>
+
+if (localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "index.html";
+}
+
+function logout() {
+  localStorage.removeItem("loggedIn");
+  window.location.href = "index.html";
+}
+
+
+/* SUPABASE */
+const SUPABASE_URL =
+  "https://hmexumitktsxswcqdeef.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
+
+
+async function loadDashboard() {
+
+  const status = document.getElementById("status");
+
+  try {
+
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/register_records?select=type,date",
+      {
+        method: "GET",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY
+        }
+      }
+    );
+
+    if (!response.ok) {
+
+      const errorText = await response.text();
+
+      throw new Error(
+        "Supabase GET " +
+        response.status +
+        ": " +
+        errorText
+      );
     }
 
-    function logout() {
-      localStorage.removeItem("loggedIn");
-      window.location.href = "index.html";
-    }
+    const records = await response.json();
 
-    // Temporary counters
+    const today =
+      new Date().toISOString().split("T")[0];
+
+    let totalInward = 0;
+    let totalOutward = 0;
+    let todayInward = 0;
+    let todayOutward = 0;
+
+    records.forEach(record => {
+
+      const type =
+        String(record.type || "").toLowerCase();
+
+      const recordDate =
+        String(record.date || "").substring(0, 10);
+
+      if (type === "inward") {
+
+        totalInward++;
+
+        if (recordDate === today) {
+          todayInward++;
+        }
+
+      }
+
+      if (type === "outward") {
+
+        totalOutward++;
+
+        if (recordDate === today) {
+          todayOutward++;
+        }
+
+      }
+
+    });
+
+
     document.getElementById("totalInward").textContent =
-      localStorage.getItem("totalInward") || "0";
+      totalInward;
 
     document.getElementById("totalOutward").textContent =
-      localStorage.getItem("totalOutward") || "0";
+      totalOutward;
 
     document.getElementById("todayInward").textContent =
-      localStorage.getItem("todayInward") || "0";
+      todayInward;
 
     document.getElementById("todayOutward").textContent =
-      localStorage.getItem("todayOutward") || "0";
+      todayOutward;
 
-  </script>
+  }
+
+  catch (error) {
+
+    console.error("Dashboard error:", error);
+
+    status.textContent =
+      "Dashboard data load failed: " + error.message;
+
+    status.style.display = "block";
+  }
+}
+
+
+loadDashboard();
+
+</script>
 
 </body>
 </html>
-```
