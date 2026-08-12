@@ -304,17 +304,11 @@
         💾 Save Outward
       </button>
 
-      <div
-        id="successMessage"
-        class="success"
-      >
+      <div id="successMessage" class="success">
         Outward record saved successfully!
       </div>
 
-      <div
-        id="errorMessage"
-        class="error"
-      ></div>
+      <div id="errorMessage" class="error"></div>
 
     </form>
 
@@ -324,298 +318,276 @@
 
 <script>
 
-  /* SUPABASE CONFIGURATION */
+/* ================================
+   SUPABASE CONFIGURATION
+================================ */
 
-  const SUPABASE_URL =
-    "https://hmexumitktsxswcqdeef.supabase.co";
+const SUPABASE_URL =
+  "https://hmexumitktsxswcqdeef.supabase.co";
 
-  const SUPABASE_ANON_KEY =
-    "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
-
-
-  const today =
-    new Date()
-      .toISOString()
-      .split("T")[0];
+const SUPABASE_ANON_KEY =
+  "sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
 
 
-  document.getElementById("date").value =
-    today;
+/* ================================
+   TODAY
+================================ */
+
+const today =
+  new Date()
+    .toISOString()
+    .split("T")[0];
+
+document.getElementById("date").value = today;
 
 
-  /* GET RECORDS FROM SUPABASE */
+/* ================================
+   GET RECORDS
+================================ */
 
-  async function getRecords() {
+async function getRecords() {
 
-    const response = await fetch(
-      SUPABASE_URL +
-      "/rest/v1/register_records?select=*",
-      {
-        method: "GET",
+  const response = await fetch(
+    SUPABASE_URL +
+    "/rest/v1/register_records?select=*",
+    {
+      method: "GET",
 
-        headers: {
-          "apikey":
-            SUPABASE_ANON_KEY,
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
 
-          "Authorization":
-            "Bearer " +
-            SUPABASE_ANON_KEY
-        }
+        "Authorization":
+          "Bearer " + SUPABASE_ANON_KEY
       }
-    );
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        "Could not load records from Supabase."
-      );
-
     }
+  );
 
+  if (!response.ok) {
 
-    return await response.json();
+    const errorText =
+      await response.text();
 
+    throw new Error(errorText);
   }
 
+  return await response.json();
+}
 
-  /* GENERATE NEXT OUTWARD NUMBER */
 
-  async function getNextOutwardNumber() {
+/* ================================
+   NEXT OUTWARD NUMBER
+================================ */
+
+async function getNextOutwardNumber() {
+
+  try {
+
+    const records =
+      await getRecords();
+
+    const outwardRecords =
+      records.filter(record =>
+        String(record.type || "")
+          .toLowerCase() === "outward"
+      );
+
+    const nextNumber =
+      outwardRecords.length + 1;
+
+    return "OUT-" +
+      String(nextNumber).padStart(3, "0");
+
+  } catch (error) {
+
+    console.error(error);
+
+    return "OUT-001";
+  }
+}
+
+
+/* ================================
+   INITIAL OUTWARD NUMBER
+================================ */
+
+getNextOutwardNumber()
+  .then(function(number) {
+
+    document.getElementById(
+      "outwardNo"
+    ).value = number;
+
+  });
+
+
+/* ================================
+   SAVE OUTWARD
+================================ */
+
+document.getElementById(
+  "outwardForm"
+).addEventListener(
+  "submit",
+  async function(event) {
+
+    event.preventDefault();
+
+    const saveBtn =
+      document.getElementById("saveBtn");
+
+    const success =
+      document.getElementById("successMessage");
+
+    const errorBox =
+      document.getElementById("errorMessage");
+
+    success.style.display = "none";
+    errorBox.style.display = "none";
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+
 
     try {
 
-      const records =
-        await getRecords();
+      const record = {
+
+        type: "Outward",
+
+        number:
+          document.getElementById(
+            "outwardNo"
+          ).value,
+
+        date:
+          document.getElementById(
+            "date"
+          ).value,
+
+        name:
+          document.getElementById(
+            "to"
+          ).value.trim(),
+
+        letter_no:
+          document.getElementById(
+            "letterNo"
+          ).value.trim(),
+
+        subject:
+          document.getElementById(
+            "subject"
+          ).value.trim(),
+
+        person:
+          document.getElementById(
+            "sentBy"
+          ).value.trim(),
+
+        delivery:
+          document.getElementById(
+            "deliveryMode"
+          ).value
+
+      };
 
 
-      const outwardRecords =
-        records.filter(
-          record =>
-            String(record.type)
-              .toLowerCase()
-              === "outward"
+      const response =
+        await fetch(
+
+          SUPABASE_URL +
+          "/rest/v1/register_records",
+
+          {
+
+            method: "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json",
+
+              "apikey":
+                SUPABASE_ANON_KEY,
+
+              "Authorization":
+                "Bearer " +
+                SUPABASE_ANON_KEY,
+
+              "Prefer":
+                "return=representation"
+
+            },
+
+            body:
+              JSON.stringify(record)
+
+          }
         );
 
 
-      const nextNumber =
-        outwardRecords.length + 1;
+      if (!response.ok) {
 
+        const message =
+          await response.text();
 
-      return "OUT-" +
-        String(nextNumber)
-          .padStart(3, "0");
-
-    }
-
-    catch (error) {
-
-      return "OUT-001";
-
-    }
-
-  }
-
-
-  /* INITIAL NUMBER */
-
-  getNextOutwardNumber()
-    .then(function(number) {
-
-      document.getElementById(
-        "outwardNo"
-      ).value = number;
-
-    });
-
-
-  /* SAVE OUTWARD */
-
-  document.getElementById(
-    "outwardForm"
-  ).addEventListener(
-    "submit",
-    async function(event) {
-
-      event.preventDefault();
-
-
-      const saveBtn =
-        document.getElementById(
-          "saveBtn"
-        );
-
-
-      const success =
-        document.getElementById(
-          "successMessage"
-        );
-
-
-      const errorBox =
-        document.getElementById(
-          "errorMessage"
-        );
+        throw new Error(message);
+      }
 
 
       success.style.display =
-        "none";
+        "block";
+
+
+      document.getElementById(
+        "outwardForm"
+      ).reset();
+
+
+      document.getElementById(
+        "date"
+      ).value = today;
+
+
+      const nextNumber =
+        await getNextOutwardNumber();
+
+
+      document.getElementById(
+        "outwardNo"
+      ).value =
+        nextNumber;
+
+    }
+
+
+    catch (error) {
+
+      console.error(
+        "Outward Save Error:",
+        error
+      );
+
+      errorBox.textContent =
+        "Save failed: " +
+        error.message;
 
       errorBox.style.display =
-        "none";
+        "block";
+
+    }
 
 
-      saveBtn.disabled =
-        true;
+    finally {
+
+      saveBtn.disabled = false;
 
       saveBtn.textContent =
-        "Saving...";
+        "💾 Save Outward";
 
+    }
 
-      try {
-
-        const record = {
-
-          type:
-            "Outward",
-
-          number:
-            document.getElementById(
-              "outwardNo"
-            ).value,
-
-          date:
-            document.getElementById(
-              "date"
-            ).value,
-
-          name:
-            document.getElementById(
-              "to"
-            ).value.trim(),
-
-          letter_no:
-            document.getElementById(
-              "letterNo"
-            ).value.trim(),
-
-          subject:
-            document.getElementById(
-              "subject"
-            ).value.trim(),
-
-          person:
-            document.getElementById(
-              "sentBy"
-            ).value.trim(),
-
-          delivery:
-            document.getElementById(
-              "deliveryMode"
-            ).value
-
-        };
-
-
-        const response =
-          await fetch(
-
-            SUPABASE_URL +
-            "/rest/v1/register_records",
-
-            {
-
-              method: "POST",
-
-              headers: {
-
-                "Content-Type":
-                  "application/json",
-
-                "apikey":
-                  SUPABASE_ANON_KEY,
-
-                "Authorization":
-                  "Bearer " +
-                  SUPABASE_ANON_KEY,
-
-                "Prefer":
-                  "return=representation"
-
-              },
-
-              body:
-                JSON.stringify(record)
-
-            }
-
-          );
-
-
-        if (!response.ok) {
-
-          const message =
-            await response.text();
-
-          throw new Error(
-            message
-          );
-
-        }
-
-
-        success.style.display =
-          "block";
-
-
-        document.getElementById(
-          "outwardForm"
-        ).reset();
-
-
-        document.getElementById(
-          "date"
-        ).value =
-          today;
-
-
-        const nextNumber =
-          await getNextOutwardNumber();
-
-
-        document.getElementById(
-          "outwardNo"
-        ).value =
-          nextNumber;
-
-
-      }
-
-      catch (error) {
-
-        console.error(error);
-
-
-        errorBox.textContent =
-          "Save failed. Please check Supabase connection and key.";
-
-        errorBox.style.display =
-          "block";
-
-      }
-
-
-      finally {
-
-        saveBtn.disabled =
-          false;
-
-        saveBtn.textContent =
-          "💾 Save Outward";
-
-      }
-
-    });
+  });
 
 </script>
 
