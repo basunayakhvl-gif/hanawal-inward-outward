@@ -128,18 +128,23 @@
       padding: 12px;
       border-radius: 8px;
       display: none;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .error {
       background: #ffebee;
       color: #c62828;
-      white-space: pre-wrap;
-      word-break: break-word;
     }
 
     .loading {
       background: #e3f2fd;
       color: #1565c0;
+    }
+
+    .success {
+      background: #e8f5e9;
+      color: #2e7d32;
     }
 
     .result-box {
@@ -158,7 +163,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 900px;
+      min-width: 950px;
     }
 
     th,
@@ -196,6 +201,7 @@
     }
 
     @media (max-width: 700px) {
+
       .search-grid {
         grid-template-columns: 1fr;
       }
@@ -225,28 +231,50 @@
 <div class="container">
 
   <div class="top">
+
     <h2>🔎 Search Register</h2>
 
-    <a href="dashboard.html" class="back-btn">
+    <a
+      href="dashboard.html"
+      class="back-btn"
+    >
       ← Dashboard
     </a>
+
   </div>
+
+
+  <!-- SEARCH BOX -->
 
   <div class="search-box">
 
     <div class="search-grid">
 
       <div class="field">
+
         <label>Register Type</label>
 
         <select id="type">
-          <option value="">All</option>
-          <option value="Inward">Inward</option>
-          <option value="Outward">Outward</option>
+
+          <option value="">
+            All
+          </option>
+
+          <option value="Inward">
+            Inward
+          </option>
+
+          <option value="Outward">
+            Outward
+          </option>
+
         </select>
+
       </div>
 
+
       <div class="field">
+
         <label>Number</label>
 
         <input
@@ -254,9 +282,12 @@
           id="number"
           placeholder="IN-001 / OUT-001"
         >
+
       </div>
 
+
       <div class="field">
+
         <label>Name / From / To</label>
 
         <input
@@ -264,9 +295,12 @@
           id="name"
           placeholder="Search name"
         >
+
       </div>
 
+
       <div class="field">
+
         <label>Letter Number</label>
 
         <input
@@ -274,9 +308,12 @@
           id="letterNo"
           placeholder="Search letter number"
         >
+
       </div>
 
+
       <div class="field">
+
         <label>Subject</label>
 
         <input
@@ -284,29 +321,37 @@
           id="subject"
           placeholder="Search subject"
         >
+
       </div>
 
+
       <div class="field">
+
         <label>Date</label>
 
         <input
           type="date"
           id="date"
         >
+
       </div>
 
     </div>
 
+
     <div class="buttons">
 
       <button
+        type="button"
         class="search-btn"
         onclick="searchRecords()"
       >
         🔎 Search
       </button>
 
+
       <button
+        type="button"
         class="clear-btn"
         onclick="clearSearch()"
       >
@@ -317,45 +362,85 @@
 
   </div>
 
-  <div id="loading" class="status loading">
+
+  <!-- STATUS -->
+
+  <div
+    id="loading"
+    class="status loading"
+  >
     Loading records...
   </div>
 
-  <div id="error" class="status error"></div>
+
+  <div
+    id="success"
+    class="status success"
+  ></div>
+
+
+  <div
+    id="error"
+    class="status error"
+  ></div>
+
+
+  <!-- RESULTS -->
 
   <div class="result-box">
 
     <div class="result-header">
+
       Search Results
-      <span id="count" class="count">
+
+      <span
+        id="count"
+        class="count"
+      >
         (0 records)
       </span>
+
     </div>
+
 
     <table>
 
       <thead>
+
         <tr>
+
           <th>Type</th>
+
           <th>Number</th>
+
           <th>Date</th>
+
           <th>Name / From / To</th>
+
           <th>Letter No.</th>
+
           <th>Subject</th>
+
           <th>Person</th>
+
           <th>Delivery</th>
+
         </tr>
+
       </thead>
+
 
       <tbody id="results">
 
         <tr>
+
           <td
             colspan="8"
             class="no-records"
           >
             Loading records...
           </td>
+
         </tr>
 
       </tbody>
@@ -366,11 +451,12 @@
 
 </div>
 
+
 <script>
 
-/* =========================================
+/* ==========================================
    SUPABASE CONFIGURATION
-========================================= */
+========================================== */
 
 const SUPABASE_URL =
   "https://hmexumitktsxswcqdeef.supabase.co";
@@ -379,12 +465,16 @@ const SUPABASE_ANON_KEY =
   "sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
 
 
+/* ==========================================
+   VARIABLES
+========================================== */
+
 let allRecords = [];
 
 
-/* =========================================
-   LOAD RECORDS FROM SUPABASE
-========================================= */
+/* ==========================================
+   LOAD RECORDS
+========================================== */
 
 async function loadRecords() {
 
@@ -394,28 +484,68 @@ async function loadRecords() {
   const errorBox =
     document.getElementById("error");
 
+  const successBox =
+    document.getElementById("success");
+
+  const results =
+    document.getElementById("results");
+
+
   loading.style.display = "block";
+
   errorBox.style.display = "none";
+
+  successBox.style.display = "none";
+
 
   try {
 
-    const response = await fetch(
+    /*
+      Only request columns needed by Search page.
+      IMPORTANT:
+      "Letter _no" has a space and underscore,
+      so it is quoted exactly.
+    */
+
+    const url =
       SUPABASE_URL +
-      "/rest/v1/register_records?select=*",
-      {
-        method: "GET",
+      "/rest/v1/register_records" +
+      "?select=id,type,number,date,name," +
+      "%22Letter%20_no%22,subject,person,delivery,created_at";
 
-        headers: {
-          "apikey": SUPABASE_ANON_KEY,
 
-          "Authorization":
-            "Bearer " + SUPABASE_ANON_KEY
+    const response =
+      await fetch(
+        url,
+        {
+          method: "GET",
+
+          headers: {
+
+            "apikey":
+              SUPABASE_ANON_KEY,
+
+            "Authorization":
+              "Bearer " +
+              SUPABASE_ANON_KEY,
+
+            "Accept":
+              "application/json"
+          }
         }
-      }
-    );
+      );
+
 
     const responseText =
       await response.text();
+
+
+    console.log(
+      "Supabase GET:",
+      response.status,
+      responseText
+    );
+
 
     if (!response.ok) {
 
@@ -425,65 +555,91 @@ async function loadRecords() {
         ": " +
         responseText
       );
+
     }
+
 
     allRecords =
       responseText
         ? JSON.parse(responseText)
         : [];
 
-    /* newest first */
-    allRecords.sort(function(a, b) {
 
-      const dateA =
-        new Date(a.created_at || 0);
+    /*
+      Newest record first
+    */
 
-      const dateB =
-        new Date(b.created_at || 0);
+    allRecords.sort(
+      function(a, b) {
 
-      return dateB - dateA;
+        return new Date(
+          b.created_at || 0
+        ) -
+        new Date(
+          a.created_at || 0
+        );
 
-    });
+      }
+    );
 
-    displayRecords(allRecords);
+
+    displayRecords(
+      allRecords
+    );
+
+
+    successBox.textContent =
+      "✅ Records loaded successfully.";
+
+    successBox.style.display =
+      "block";
+
 
   }
 
   catch (error) {
 
     console.error(
-      "SEARCH LOAD ERROR:",
+      "SEARCH ERROR:",
       error
     );
+
 
     errorBox.textContent =
       "❌ Records load ಆಗಲಿಲ್ಲ.\n\n" +
       error.message;
 
-    errorBox.style.display = "block";
 
-    document.getElementById(
-      "results"
-    ).innerHTML = `
+    errorBox.style.display =
+      "block";
+
+
+    results.innerHTML = `
       <tr>
-        <td colspan="8" class="no-records">
+        <td
+          colspan="8"
+          class="no-records"
+        >
           Records load ಆಗಲಿಲ್ಲ.
         </td>
       </tr>
     `;
+
   }
 
   finally {
 
-    loading.style.display = "none";
+    loading.style.display =
+      "none";
 
   }
+
 }
 
 
-/* =========================================
-   SEARCH RECORDS
-========================================= */
+/* ==========================================
+   SEARCH
+========================================== */
 
 function searchRecords() {
 
@@ -493,11 +649,13 @@ function searchRecords() {
       .trim()
       .toLowerCase();
 
+
   const number =
     document.getElementById("number")
       .value
       .trim()
       .toLowerCase();
+
 
   const name =
     document.getElementById("name")
@@ -505,11 +663,13 @@ function searchRecords() {
       .trim()
       .toLowerCase();
 
+
   const letterNo =
     document.getElementById("letterNo")
       .value
       .trim()
       .toLowerCase();
+
 
   const subject =
     document.getElementById("subject")
@@ -517,90 +677,103 @@ function searchRecords() {
       .trim()
       .toLowerCase();
 
+
   const date =
-    document.getElementById("date").value;
+    document.getElementById("date")
+      .value;
 
 
   const filtered =
-    allRecords.filter(function(record) {
+    allRecords.filter(
+      function(record) {
 
-      const recordType =
-        String(
-          record.type || ""
-        ).toLowerCase();
+        const recordType =
+          String(
+            record.type || ""
+          ).toLowerCase();
 
-      const recordNumber =
-        String(
-          record.number || ""
-        ).toLowerCase();
 
-      const recordName =
-        String(
-          record.name || ""
-        ).toLowerCase();
+        const recordNumber =
+          String(
+            record.number || ""
+          ).toLowerCase();
 
-      /*
-        IMPORTANT:
-        Database column is "Letter _no"
-      */
-      const recordLetter =
-        String(
-          record["Letter _no"] || ""
-        ).toLowerCase();
 
-      const recordSubject =
-        String(
-          record.subject || ""
-        ).toLowerCase();
+        const recordName =
+          String(
+            record.name || ""
+          ).toLowerCase();
 
-      const recordDate =
-        String(
-          record.date || ""
+
+        /*
+          EXACT DATABASE COLUMN:
+          Letter _no
+        */
+
+        const recordLetter =
+          String(
+            record["Letter _no"] || ""
+          ).toLowerCase();
+
+
+        const recordSubject =
+          String(
+            record.subject || ""
+          ).toLowerCase();
+
+
+        const recordDate =
+          String(
+            record.date || ""
+          );
+
+
+        return (
+
+          (!type ||
+            recordType === type)
+
+          &&
+
+          (!number ||
+            recordNumber.includes(number))
+
+          &&
+
+          (!name ||
+            recordName.includes(name))
+
+          &&
+
+          (!letterNo ||
+            recordLetter.includes(letterNo))
+
+          &&
+
+          (!subject ||
+            recordSubject.includes(subject))
+
+          &&
+
+          (!date ||
+            recordDate === date)
+
         );
 
-
-      return (
-
-        (!type ||
-          recordType === type)
-
-        &&
-
-        (!number ||
-          recordNumber.includes(number))
-
-        &&
-
-        (!name ||
-          recordName.includes(name))
-
-        &&
-
-        (!letterNo ||
-          recordLetter.includes(letterNo))
-
-        &&
-
-        (!subject ||
-          recordSubject.includes(subject))
-
-        &&
-
-        (!date ||
-          recordDate === date)
-
-      );
-
-    });
+      }
+    );
 
 
-  displayRecords(filtered);
+  displayRecords(
+    filtered
+  );
+
 }
 
 
-/* =========================================
+/* ==========================================
    DISPLAY RECORDS
-========================================= */
+========================================== */
 
 function displayRecords(records) {
 
@@ -617,7 +790,10 @@ function displayRecords(records) {
     " records)";
 
 
-  if (!records.length) {
+  if (
+    !records ||
+    records.length === 0
+  ) {
 
     tbody.innerHTML = `
       <tr>
@@ -631,68 +807,84 @@ function displayRecords(records) {
     `;
 
     return;
+
   }
 
 
   tbody.innerHTML =
-    records.map(function(record) {
+    records.map(
+      function(record) {
 
-      const type =
-        String(
-          record.type || ""
-        );
-
-      const typeClass =
-        type.toLowerCase() === "inward"
-          ? "inward"
-          : "outward";
+        const type =
+          String(
+            record.type || ""
+          );
 
 
-      return `
-        <tr>
+        const typeClass =
+          type.toLowerCase() === "inward"
+            ? "inward"
+            : "outward";
 
-          <td class="${typeClass}">
-            ${escapeHTML(type)}
-          </td>
 
-          <td>
-            ${escapeHTML(record.number)}
-          </td>
+        return `
 
-          <td>
-            ${escapeHTML(record.date)}
-          </td>
+          <tr>
 
-          <td>
-            ${escapeHTML(record.name)}
-          </td>
+            <td class="${typeClass}">
+              ${escapeHTML(type)}
+            </td>
 
-          <td>
-            ${escapeHTML(record["Letter _no"])}
-          </td>
 
-          <td>
-            ${escapeHTML(record.subject)}
-          </td>
+            <td>
+              ${escapeHTML(record.number)}
+            </td>
 
-          <td>
-            ${escapeHTML(record.person)}
-          </td>
 
-          <td>
-            ${escapeHTML(record.delivery)}
-          </td>
+            <td>
+              ${escapeHTML(record.date)}
+            </td>
 
-        </tr>
-      `;
 
-    }).join("");
+            <td>
+              ${escapeHTML(record.name)}
+            </td>
+
+
+            <td>
+              ${escapeHTML(
+                record["Letter _no"]
+              )}
+            </td>
+
+
+            <td>
+              ${escapeHTML(record.subject)}
+            </td>
+
+
+            <td>
+              ${escapeHTML(record.person)}
+            </td>
+
+
+            <td>
+              ${escapeHTML(record.delivery)}
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    ).join("");
+
 }
 
 
-/* =========================================
+/* ==========================================
    ESCAPE HTML
-========================================= */
+========================================== */
 
 function escapeHTML(value) {
 
@@ -700,45 +892,107 @@ function escapeHTML(value) {
     value === null ||
     value === undefined
   ) {
+
     return "";
+
   }
 
+
   return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
 }
 
 
-/* =========================================
-   CLEAR SEARCH
-========================================= */
+/* ==========================================
+   CLEAR
+========================================== */
 
 function clearSearch() {
 
-  document.getElementById("type").value = "";
+  document.getElementById(
+    "type"
+  ).value = "";
 
-  document.getElementById("number").value = "";
 
-  document.getElementById("name").value = "";
+  document.getElementById(
+    "number"
+  ).value = "";
 
-  document.getElementById("letterNo").value = "";
 
-  document.getElementById("subject").value = "";
+  document.getElementById(
+    "name"
+  ).value = "";
 
-  document.getElementById("date").value = "";
 
-  displayRecords(allRecords);
+  document.getElementById(
+    "letterNo"
+  ).value = "";
+
+
+  document.getElementById(
+    "subject"
+  ).value = "";
+
+
+  document.getElementById(
+    "date"
+  ).value = "";
+
+
+  document.getElementById(
+    "error"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "success"
+  ).style.display = "none";
+
+
+  displayRecords(
+    allRecords
+  );
+
 }
 
 
-/* =========================================
-   LOAD WHEN PAGE OPENS
-========================================= */
+/* ==========================================
+   PAGE LOAD
+========================================== */
 
-loadRecords();
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    loadRecords();
+
+  }
+);
 
 </script>
 
