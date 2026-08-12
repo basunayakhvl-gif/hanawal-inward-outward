@@ -6,58 +6,46 @@
 <title>Reports - Hanawal Gram Panchayat</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{background:#f4f7f4;min-height:100vh;color:#333}
+body{background:#f4f7f4;color:#333}
 header{background:#00838f;color:#fff;padding:16px 20px}
-header h1{font-size:20px}
-header p{font-size:13px;margin-top:4px}
-.container{max-width:1200px;margin:auto;padding:20px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}
+header h1{font-size:20px} header p{font-size:13px;margin-top:4px}
+.container{max-width:1250px;margin:auto;padding:20px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:10px}
 .back{background:#555;color:#fff;text-decoration:none;padding:9px 14px;border-radius:7px}
 .status{display:none;padding:12px;margin-bottom:15px;border-radius:8px;white-space:pre-wrap;word-break:break-word}
-.loading{background:#e3f2fd;color:#1565c0}
-.success{background:#e8f5e9;color:#2e7d32}
-.error{background:#ffebee;color:#c62828}
+.loading{background:#e3f2fd;color:#1565c0}.success{background:#e8f5e9;color:#2e7d32}.error{background:#ffebee;color:#c62828}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
-.card{background:#fff;border-radius:14px;padding:20px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.08)}
-.icon{font-size:28px}
-.card h3{font-size:14px;color:#666;margin:7px 0}
-.num{font-size:30px;font-weight:bold;color:#00838f}
-.filter{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 12px rgba(0,0,0,.08);margin-bottom:20px}
+.card{background:#fff;border-radius:14px;padding:20px;text-align:center;box-shadow:0 3px 12px #0001}
+.icon{font-size:28px}.card h3{font-size:14px;color:#666;margin:7px 0}.num{font-size:30px;font-weight:bold;color:#00838f}
+.filter{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 12px #0001;margin-bottom:20px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
 select,input{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;font-size:14px}
 .buttons{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap}
-button{border:0;border-radius:8px;padding:11px 18px;font-weight:bold;cursor:pointer}
-.apply{background:#00838f;color:#fff}
-.clear{background:#e0e0e0;color:#333}
-.print{background:#37474f;color:#fff}
-.tablebox{background:#fff;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.08);overflow-x:auto}
+button{border:0;border-radius:8px;padding:11px 16px;font-weight:bold;cursor:pointer}
+.apply{background:#00838f;color:#fff}.clear{background:#e0e0e0}.print{background:#37474f;color:#fff}
+.tablebox{background:#fff;border-radius:14px;box-shadow:0 3px 12px #0001;overflow-x:auto}
 .title{padding:15px 18px;border-bottom:1px solid #ddd;font-weight:bold}
-table{width:100%;border-collapse:collapse;min-width:900px}
-th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px}
-th{background:#f5f5f5}
-.inward{color:#1565c0;font-weight:bold}
-.outward{color:#ef6c00;font-weight:bold}
+table{width:100%;border-collapse:collapse;min-width:1020px}
+th,td{padding:10px;border-bottom:1px solid #eee;text-align:left;font-size:13px}
+th{background:#f5f5f5}.inward{color:#1565c0;font-weight:bold}.outward{color:#ef6c00;font-weight:bold}
 .empty{text-align:center;padding:30px;color:#777}
+.docbtn{display:inline-block;text-decoration:none;border:0;border-radius:6px;padding:7px 9px;font-size:12px;font-weight:bold;margin:2px;cursor:pointer}
+.view{background:#1565c0;color:#fff}.docprint{background:#37474f;color:#fff}
+.nodoc{color:#999;font-size:12px}
 .print-header{display:none}
 @media(max-width:700px){
-.cards{grid-template-columns:1fr 1fr}
-.grid{grid-template-columns:1fr}
-.buttons{flex-direction:column}
-button{width:100%}
+.cards{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.buttons{flex-direction:column}
+button{width:100%}.top{align-items:flex-start}
 }
 @media(max-width:430px){.cards{grid-template-columns:1fr}}
 @media print{
-header,.top,.filter,.status{display:none!important}
-.container{padding:0;max-width:none}
-.tablebox{box-shadow:none}
+header,.top,.filter,.status,.actions,.document-actions{display:none!important}
+.container{padding:0;max-width:none}.tablebox{box-shadow:none}
 .print-header{display:block;text-align:center;margin-bottom:15px}
-.print-header h1{font-size:20px}
-.print-header p{font-size:13px;margin-top:5px}
 }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -83,47 +71,21 @@ header,.top,.filter,.status{display:none!important}
 <div id="error" class="status error"></div>
 
 <div class="cards">
-<div class="card">
-<div class="icon">📋</div>
-<h3>Total Records</h3>
-<div id="total" class="num">0</div>
-</div>
-
-<div class="card">
-<div class="icon">📥</div>
-<h3>Total Inward</h3>
-<div id="inward" class="num">0</div>
-</div>
-
-<div class="card">
-<div class="icon">📤</div>
-<h3>Total Outward</h3>
-<div id="outward" class="num">0</div>
-</div>
+<div class="card"><div class="icon">📋</div><h3>Total Records</h3><div id="total" class="num">0</div></div>
+<div class="card"><div class="icon">📥</div><h3>Total Inward</h3><div id="inward" class="num">0</div></div>
+<div class="card"><div class="icon">📤</div><h3>Total Outward</h3><div id="outward" class="num">0</div></div>
 </div>
 
 <div class="filter">
 <div class="grid">
-
 <div>
 <label>Register Type</label>
 <select id="type">
-<option value="">All</option>
-<option value="Inward">Inward</option>
-<option value="Outward">Outward</option>
+<option value="">All</option><option value="Inward">Inward</option><option value="Outward">Outward</option>
 </select>
 </div>
-
-<div>
-<label>From Date</label>
-<input type="date" id="fromDate">
-</div>
-
-<div>
-<label>To Date</label>
-<input type="date" id="toDate">
-</div>
-
+<div><label>From Date</label><input type="date" id="fromDate"></div>
+<div><label>To Date</label><input type="date" id="toDate"></div>
 </div>
 
 <div class="buttons">
@@ -134,273 +96,162 @@ header,.top,.filter,.status{display:none!important}
 </div>
 
 <div class="tablebox">
-
-<div class="title">
-Register Records
-<span id="count">(0 records)</span>
-</div>
-
+<div class="title">Register Records <span id="count">(0 records)</span></div>
 <table>
 <thead>
 <tr>
-<th>Type</th>
-<th>Number</th>
-<th>Date</th>
-<th>Name / From / To</th>
-<th>Letter No.</th>
-<th>Subject</th>
-<th>Person</th>
-<th>Delivery</th>
+<th>Type</th><th>Number</th><th>Date</th><th>Name / From / To</th>
+<th>Letter No.</th><th>Subject</th><th>Person</th><th>Delivery</th><th>Document</th>
 </tr>
 </thead>
-
 <tbody id="results">
-<tr>
-<td colspan="8" class="empty">Loading...</td>
-</tr>
+<tr><td colspan="9" class="empty">Loading...</td></tr>
 </tbody>
 </table>
-
 </div>
-
 </div>
 
 <script>
-const SUPABASE_URL =
-"https://hmexumitktsxswcqdeef.supabase.co";
+const SUPABASE_URL="https://hmexumitktsxswcqdeef.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
+let allRecords=[];
 
-const SUPABASE_ANON_KEY =
-"sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
-
-let allRecords = [];
-
-function escapeHTML(value){
-if(value===null || value===undefined) return "";
-return String(value)
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
+function escapeHTML(v){
+if(v===null||v===undefined)return "";
+return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
 
-function getLetterNumber(record){
-return (
-record["Letter _no"] ??
-record["Letter_no"] ??
-record["letter_no"] ??
-record["Letter No"] ??
-record["letter number"] ??
-""
-);
+function getLetterNumber(r){
+return r["Letter _no"] ?? r["Letter_no"] ?? r["letter_no"] ?? r["Letter No"] ?? r["letter number"] ?? "";
 }
 
-function getName(record){
-return record.name ?? record.Name ?? "";
+function getName(r){return r.name ?? r.Name ?? "";}
+
+/* Accept several possible document URL column names. */
+function getDocumentURL(r){
+return r.document_url ??
+       r.documentUrl ??
+       r.file_url ??
+       r.fileUrl ??
+       r.upload_url ??
+       r.uploadUrl ??
+       r.document_path ??
+       r.file_path ??
+       r.document ??
+       "";
+}
+
+function getDocumentName(r){
+return r.document_name ?? r.file_name ?? r.filename ?? "Document";
 }
 
 async function loadReports(){
-
 const loading=document.getElementById("loading");
 const success=document.getElementById("success");
 const error=document.getElementById("error");
-
-loading.style.display="block";
-success.style.display="none";
-error.style.display="none";
+loading.style.display="block"; success.style.display="none"; error.style.display="none";
 
 try{
-
-const url =
-SUPABASE_URL +
-"/rest/v1/register_records?select=*&order=created_at.desc";
-
-const response=await fetch(url,{
-method:"GET",
-headers:{
+const response=await fetch(
+SUPABASE_URL+"/rest/v1/register_records?select=*&order=created_at.desc",
+{method:"GET",headers:{
 "apikey":SUPABASE_ANON_KEY,
 "Authorization":"Bearer "+SUPABASE_ANON_KEY,
 "Accept":"application/json"
-}
-});
-
-const text=await response.text();
-
-if(!response.ok){
-throw new Error(
-"Supabase GET "+response.status+": "+text
+}}
 );
-}
-
-allRecords=text ? JSON.parse(text) : [];
-
+const text=await response.text();
+if(!response.ok)throw new Error("Supabase GET "+response.status+": "+text);
+allRecords=text?JSON.parse(text):[];
 updateSummary(allRecords);
 displayRecords(allRecords);
-
-success.textContent =
-"✅ "+allRecords.length+
-" records loaded successfully.";
-
+success.textContent="✅ "+allRecords.length+" records loaded successfully.";
 success.style.display="block";
-
-}
-catch(errorValue){
-
-console.error("REPORTS ERROR:",errorValue);
-
-error.textContent =
-"❌ Records load ಆಗಲಿಲ್ಲ.\n\n"+
-errorValue.message;
-
+}catch(e){
+console.error(e);
+error.textContent="❌ Records load ಆಗಲಿಲ್ಲ.\n\n"+e.message;
 error.style.display="block";
-
-document.getElementById("results").innerHTML =
-'<tr><td colspan="8" class="empty">Records load ಆಗಲಿಲ್ಲ.</td></tr>';
-
-}
-finally{
-
-loading.style.display="none";
-
-}
-
+document.getElementById("results").innerHTML='<tr><td colspan="9" class="empty">Records load ಆಗಲಿಲ್ಲ.</td></tr>';
+}finally{loading.style.display="none";}
 }
 
 function updateSummary(records){
-
-const inward =
-records.filter(r =>
-String(r.type||"").toLowerCase()==="inward"
-).length;
-
-const outward =
-records.filter(r =>
-String(r.type||"").toLowerCase()==="outward"
-).length;
-
-document.getElementById("total").textContent =
-records.length;
-
-document.getElementById("inward").textContent =
-inward;
-
-document.getElementById("outward").textContent =
-outward;
-
+document.getElementById("total").textContent=records.length;
+document.getElementById("inward").textContent=records.filter(r=>String(r.type||"").toLowerCase()==="inward").length;
+document.getElementById("outward").textContent=records.filter(r=>String(r.type||"").toLowerCase()==="outward").length;
 }
 
 function applyFilter(){
-
-const type =
-document.getElementById("type").value.toLowerCase();
-
-const from =
-document.getElementById("fromDate").value;
-
-const to =
-document.getElementById("toDate").value;
-
-const filtered =
-allRecords.filter(function(record){
-
-const recordType =
-String(record.type||"").toLowerCase();
-
-const recordDate =
-String(record.date||"").substring(0,10);
-
-return (
-(!type || recordType===type) &&
-(!from || recordDate>=from) &&
-(!to || recordDate<=to)
-);
-
+const type=document.getElementById("type").value.toLowerCase();
+const from=document.getElementById("fromDate").value;
+const to=document.getElementById("toDate").value;
+const filtered=allRecords.filter(r=>{
+const t=String(r.type||"").toLowerCase();
+const d=String(r.date||"").substring(0,10);
+return (!type||t===type)&&(!from||d>=from)&&(!to||d<=to);
 });
-
 displayRecords(filtered);
-
 }
 
 function clearFilter(){
-
 document.getElementById("type").value="";
 document.getElementById("fromDate").value="";
 document.getElementById("toDate").value="";
-
 displayRecords(allRecords);
-
 }
 
 function displayRecords(records){
-
-const tbody =
-document.getElementById("results");
-
-document.getElementById("count").textContent =
-"("+records.length+" records)";
-
+const tbody=document.getElementById("results");
+document.getElementById("count").textContent="("+records.length+" records)";
 if(!records.length){
-
-tbody.innerHTML =
-'<tr><td colspan="8" class="empty">No records found</td></tr>';
-
+tbody.innerHTML='<tr><td colspan="9" class="empty">No records found</td></tr>';
 return;
-
 }
 
-tbody.innerHTML =
-records.map(function(record){
+tbody.innerHTML=records.map(r=>{
+const type=String(r.type||"");
+const cls=type.toLowerCase()==="inward"?"inward":"outward";
+const url=getDocumentURL(r);
+const name=getDocumentName(r);
 
-const type =
-String(record.type||"");
+let docCell='<span class="nodoc">No document</span>';
 
-const className =
-type.toLowerCase()==="inward"
-? "inward"
-: "outward";
+if(url){
+const safe=escapeHTML(url);
+docCell=
+'<a class="docbtn view" href="'+safe+'" target="_blank" rel="noopener">👁️ View</a>'+
+'<button class="docbtn docprint" onclick="printDocument('+JSON.stringify(url)+')">🖨️ Print</button>';
+}
 
-return `
-<tr>
-<td class="${className}">
-${escapeHTML(type)}
-</td>
-
-<td>${escapeHTML(record.number)}</td>
-
-<td>${escapeHTML(record.date)}</td>
-
-<td>${escapeHTML(getName(record))}</td>
-
-<td>${escapeHTML(getLetterNumber(record))}</td>
-
-<td>${escapeHTML(record.subject)}</td>
-
-<td>${escapeHTML(record.person)}</td>
-
-<td>${escapeHTML(record.delivery)}</td>
-</tr>
-`;
-
+return '<tr>'+
+'<td class="'+cls+'">'+escapeHTML(type)+'</td>'+
+'<td>'+escapeHTML(r.number)+'</td>'+
+'<td>'+escapeHTML(r.date)+'</td>'+
+'<td>'+escapeHTML(getName(r))+'</td>'+
+'<td>'+escapeHTML(getLetterNumber(r))+'</td>'+
+'<td>'+escapeHTML(r.subject)+'</td>'+
+'<td>'+escapeHTML(r.person)+'</td>'+
+'<td>'+escapeHTML(r.delivery)+'</td>'+
+'<td>'+docCell+'</td>'+
+'</tr>';
 }).join("");
-
 }
 
 function printReport(){
-
-document.getElementById("printDate").textContent =
-"Printed: "+new Date().toLocaleString();
-
+document.getElementById("printDate").textContent="Printed: "+new Date().toLocaleString();
 window.print();
-
 }
 
-document.addEventListener(
-"DOMContentLoaded",
-function(){
-loadReports();
+function printDocument(url){
+const w=window.open(url,"_blank");
+if(!w){
+alert("Popup blocked. Please allow popups for this website.");
+return;
 }
-);
+w.onload=function(){setTimeout(function(){w.print();},700);};
+}
+
+document.addEventListener("DOMContentLoaded",loadReports);
 </script>
-
 </body>
 </html>
