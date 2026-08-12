@@ -2,88 +2,238 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Reports - Hanawal Gram Panchayat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanawal Gram Panchayat - Reports</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{background:#f4f7f4;min-height:100vh}
+body{background:#f4f7f4;min-height:100vh;color:#333}
 header{background:#00838f;color:#fff;padding:16px 20px}
-header h1{font-size:20px} header p{font-size:13px;margin-top:4px}
-.container{max-width:1100px;margin:auto;padding:20px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.back-btn{background:#555;color:#fff;text-decoration:none;padding:9px 14px;border-radius:7px}
-.status{display:none;margin-bottom:15px;padding:12px;border-radius:8px;white-space:pre-wrap;word-break:break-word}
-.loading{background:#e3f2fd;color:#1565c0}.success{background:#e8f5e9;color:#2e7d32}.error{background:#ffebee;color:#c62828}
+header h1{font-size:20px}
+header p{font-size:13px;margin-top:4px}
+.container{max-width:1200px;margin:auto;padding:20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}
+.back{background:#555;color:#fff;text-decoration:none;padding:9px 14px;border-radius:7px}
+.status{display:none;padding:12px;margin-bottom:15px;border-radius:8px;white-space:pre-wrap;word-break:break-word}
+.loading{background:#e3f2fd;color:#1565c0}
+.success{background:#e8f5e9;color:#2e7d32}
+.error{background:#ffebee;color:#c62828}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
-.card{background:#fff;padding:22px;border-radius:14px;box-shadow:0 3px 12px #0001;text-align:center}
-.card h3{font-size:14px;color:#666;margin-bottom:10px}.number{font-size:32px;font-weight:bold;color:#00838f}
-.actions{display:flex;gap:10px;margin-bottom:20px}
+.card{background:#fff;border-radius:14px;padding:20px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.icon{font-size:28px}.card h3{font-size:14px;color:#666;margin:7px 0}
+.num{font-size:30px;font-weight:bold;color:#00838f}
+.filter{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 12px rgba(0,0,0,.08);margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
+select,input{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;font-size:14px}
+.buttons{display:flex;gap:10px;margin-top:15px}
 button{border:0;border-radius:8px;padding:11px 18px;font-weight:bold;cursor:pointer}
-.refresh{background:#00838f;color:#fff}.dash{background:#555;color:#fff}
-.table-box{background:#fff;border-radius:14px;box-shadow:0 3px 12px #0001;overflow-x:auto}
-.table-title{padding:15px 18px;border-bottom:1px solid #ddd;font-weight:bold}
-table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px}th{background:#f5f5f5}
-.inward{color:#1565c0;font-weight:bold}.outward{color:#ef6c00;font-weight:bold}.no-records{text-align:center;padding:30px;color:#777}
-@media(max-width:700px){.cards{grid-template-columns:1fr 1fr}.actions{flex-direction:column}.top{align-items:flex-start}button{width:100%}}
-@media(max-width:450px){.cards{grid-template-columns:1fr}}
+.apply{background:#00838f;color:#fff}.clear{background:#e0e0e0}.print{background:#37474f;color:#fff}
+.tablebox{background:#fff;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.08);overflow-x:auto}
+.title{padding:15px 18px;border-bottom:1px solid #ddd;font-weight:bold}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px}
+th{background:#f5f5f5}.inward{color:#1565c0;font-weight:bold}.outward{color:#ef6c00;font-weight:bold}
+.empty{text-align:center;padding:30px;color:#777}
+@media(max-width:700px){.cards{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.buttons{flex-direction:column}button{width:100%}}
+@media(max-width:430px){.cards{grid-template-columns:1fr}}
+@media print{header,.top,.filter,.status{display:none!important}.container{padding:0}.tablebox{box-shadow:none}}
 </style>
 </head>
 <body>
-<header><h1>Hanawal Gram Panchayat</h1><p>Inward &amp; Outward Register</p></header>
+
+<header>
+<h1>Hanawal Gram Panchayat</h1>
+<p>Inward &amp; Outward Register - Reports</p>
+</header>
+
 <div class="container">
-<div class="top"><h2>📊 Reports</h2><a href="dashboard.html" class="back-btn">← Dashboard</a></div>
+
+<div class="top">
+<h2>📊 Reports</h2>
+<a href="dashboard.html" class="back">← Dashboard</a>
+</div>
+
 <div id="loading" class="status loading">Loading records...</div>
 <div id="success" class="status success"></div>
 <div id="error" class="status error"></div>
+
 <div class="cards">
-<div class="card"><h3>Total Records</h3><div id="totalRecords" class="number">0</div></div>
-<div class="card"><h3>Total Inward</h3><div id="totalInward" class="number">0</div></div>
-<div class="card"><h3>Total Outward</h3><div id="totalOutward" class="number">0</div></div>
-<div class="card"><h3>Today's Inward</h3><div id="todayInward" class="number">0</div></div>
-<div class="card"><h3>Today's Outward</h3><div id="todayOutward" class="number">0</div></div>
-<div class="card"><h3>Latest Records</h3><div id="latestRecords" class="number">0</div></div>
+<div class="card"><div class="icon">📋</div><h3>Total Records</h3><div id="total" class="num">0</div></div>
+<div class="card"><div class="icon">📥</div><h3>Total Inward</h3><div id="inward" class="num">0</div></div>
+<div class="card"><div class="icon">📤</div><h3>Total Outward</h3><div id="outward" class="num">0</div></div>
 </div>
-<div class="actions"><button class="refresh" onclick="loadReports()">🔄 Refresh Reports</button><button class="dash" onclick="location.href='dashboard.html'">🏠 Dashboard</button></div>
-<div class="table-box"><div class="table-title">Recent Register Records</div>
-<table><thead><tr><th>Type</th><th>Number</th><th>Date</th><th>Name / From / To</th><th>Letter No.</th><th>Subject</th><th>Person</th><th>Delivery</th></tr></thead>
-<tbody id="results"><tr><td colspan="8" class="no-records">Loading records...</td></tr></tbody></table></div>
+
+<div class="filter">
+<div class="grid">
+<div>
+<label>Register Type</label>
+<select id="type">
+<option value="">All</option>
+<option value="Inward">Inward</option>
+<option value="Outward">Outward</option>
+</select>
 </div>
+<div>
+<label>From Date</label>
+<input type="date" id="fromDate">
+</div>
+<div>
+<label>To Date</label>
+<input type="date" id="toDate">
+</div>
+</div>
+<div class="buttons">
+<button class="apply" onclick="applyFilter()">🔎 Apply Filter</button>
+<button class="clear" onclick="clearFilter()">Clear</button>
+<button class="print" onclick="window.print()">🖨️ Print / PDF</button>
+</div>
+</div>
+
+<div class="tablebox">
+<div class="title">Register Records <span id="count"></span></div>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Number</th>
+<th>Date</th>
+<th>Name / From / To</th>
+<th>Letter No.</th>
+<th>Subject</th>
+<th>Person</th>
+<th>Delivery</th>
+</tr>
+</thead>
+<tbody id="results">
+<tr><td colspan="8" class="empty">Loading...</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
 <script>
 const SUPABASE_URL="https://hmexumitktsxswcqdeef.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
+
 let allRecords=[];
-function getLetterNumber(r){return r["Letter _no"]??r["Letter_no"]??r["letter_no"]??r["Letter No"]??""}
-function getName(r){return r.name??r.Name??""}
-function escapeHTML(v){if(v==null)return "";return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-async function loadReports(){
-const loading=document.getElementById("loading"),success=document.getElementById("success"),error=document.getElementById("error");
-loading.style.display="block";success.style.display="none";error.style.display="none";
-try{
-const res=await fetch(SUPABASE_URL+"/rest/v1/register_records?select=*",{headers:{apikey:SUPABASE_ANON_KEY,Authorization:"Bearer "+SUPABASE_ANON_KEY,Accept:"application/json"}});
-const text=await res.text(); if(!res.ok)throw new Error("Supabase GET "+res.status+": "+text);
-allRecords=text?JSON.parse(text):[]; allRecords.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
-const inward=allRecords.filter(r=>String(r.type||"").toLowerCase()==="inward").length;
-const outward=allRecords.filter(r=>String(r.type||"").toLowerCase()==="outward").length;
-const today=new Date().toISOString().split("T")[0];
-const ti=allRecords.filter(r=>String(r.type||"").toLowerCase()==="inward"&&String(r.date||"").substring(0,10)===today).length;
-const to=allRecords.filter(r=>String(r.type||"").toLowerCase()==="outward"&&String(r.date||"").substring(0,10)===today).length;
-document.getElementById("totalRecords").textContent=allRecords.length;
-document.getElementById("totalInward").textContent=inward;
-document.getElementById("totalOutward").textContent=outward;
-document.getElementById("todayInward").textContent=ti;
-document.getElementById("todayOutward").textContent=to;
-document.getElementById("latestRecords").textContent=Math.min(allRecords.length,20);
-displayRecords(allRecords.slice(0,20));
-success.textContent="✅ "+allRecords.length+" records loaded successfully.";success.style.display="block";
-}catch(e){console.error(e);error.textContent="❌ Records load ಆಗಲಿಲ್ಲ.\n\n"+e.message;error.style.display="block";document.getElementById("results").innerHTML='<tr><td colspan="8" class="no-records">Records load ಆಗಲಿಲ್ಲ.</td></tr>'}
-finally{loading.style.display="none"}
+
+function esc(v){
+if(v===null||v===undefined)return "";
+return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
+
+function letterNo(r){
+return r["Letter _no"] ?? r["Letter_no"] ?? r["letter_no"] ?? r["Letter No"] ?? r["letter number"] ?? "";
+}
+
+function nameValue(r){
+return r.name ?? r.Name ?? "";
+}
+
+async function loadReports(){
+const loading=document.getElementById("loading");
+const success=document.getElementById("success");
+const error=document.getElementById("error");
+
+loading.style.display="block";
+success.style.display="none";
+error.style.display="none";
+
+try{
+const url=SUPABASE_URL+"/rest/v1/register_records?select=*&order=created_at.desc";
+const response=await fetch(url,{
+method:"GET",
+headers:{
+"apikey":SUPABASE_ANON_KEY,
+"Authorization":"Bearer "+SUPABASE_ANON_KEY,
+"Accept":"application/json"
+}
+});
+
+const text=await response.text();
+
+if(!response.ok){
+throw new Error("Supabase GET "+response.status+": "+text);
+}
+
+allRecords=text?JSON.parse(text):[];
+updateSummary(allRecords);
+displayRecords(allRecords);
+
+success.textContent="✅ "+allRecords.length+" records loaded successfully.";
+success.style.display="block";
+
+}catch(err){
+console.error("REPORTS ERROR:",err);
+error.textContent="❌ Records load ಆಗಲಿಲ್ಲ.\n\n"+err.message;
+error.style.display="block";
+document.getElementById("results").innerHTML='<tr><td colspan="8" class="empty">Records load ಆಗಲಿಲ್ಲ.</td></tr>';
+}finally{
+loading.style.display="none";
+}
+}
+
+function updateSummary(records){
+const inward=records.filter(r=>String(r.type||"").toLowerCase()==="inward").length;
+const outward=records.filter(r=>String(r.type||"").toLowerCase()==="outward").length;
+document.getElementById("total").textContent=records.length;
+document.getElementById("inward").textContent=inward;
+document.getElementById("outward").textContent=outward;
+}
+
+function applyFilter(){
+const type=document.getElementById("type").value.toLowerCase();
+const from=document.getElementById("fromDate").value;
+const to=document.getElementById("toDate").value;
+
+const filtered=allRecords.filter(r=>{
+const rt=String(r.type||"").toLowerCase();
+const d=String(r.date||"").substring(0,10);
+
+return (!type||rt===type) &&
+       (!from||d>=from) &&
+       (!to||d<=to);
+});
+
+displayRecords(filtered);
+}
+
+function clearFilter(){
+document.getElementById("type").value="";
+document.getElementById("fromDate").value="";
+document.getElementById("toDate").value="";
+displayRecords(allRecords);
+}
+
 function displayRecords(records){
 const tbody=document.getElementById("results");
-if(!records.length){tbody.innerHTML='<tr><td colspan="8" class="no-records">No records found</td></tr>';return}
-tbody.innerHTML=records.map(r=>{const type=String(r.type||"");return `<tr><td class="${type.toLowerCase()==="inward"?"inward":"outward"}">${escapeHTML(type)}</td><td>${escapeHTML(r.number)}</td><td>${escapeHTML(r.date)}</td><td>${escapeHTML(getName(r))}</td><td>${escapeHTML(getLetterNumber(r))}</td><td>${escapeHTML(r.subject)}</td><td>${escapeHTML(r.person)}</td><td>${escapeHTML(r.delivery)}</td></tr>`}).join("")
+document.getElementById("count").textContent=" ("+records.length+" records)";
+
+if(!records.length){
+tbody.innerHTML='<tr><td colspan="8" class="empty">No records found</td></tr>';
+return;
 }
+
+tbody.innerHTML=records.map(r=>{
+const type=String(r.type||"");
+const cls=type.toLowerCase()==="inward"?"inward":"outward";
+
+return `<tr>
+<td class="${cls}">${esc(type)}</td>
+<td>${esc(r.number)}</td>
+<td>${esc(r.date)}</td>
+<td>${esc(nameValue(r))}</td>
+<td>${esc(letterNo(r))}</td>
+<td>${esc(r.subject)}</td>
+<td>${esc(r.person)}</td>
+<td>${esc(r.delivery)}</td>
+</tr>`;
+}).join("");
+}
+
 document.addEventListener("DOMContentLoaded",loadReports);
 </script>
+
 </body>
 </html>
