@@ -1,4 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Outward Entry - Hanawal Gram Panchayat</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7f4;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #ef6c00;
+      color: white;
+      padding: 16px 20px;
+    }
+
+    header h1 {
+      font-size: 20px;
+    }
+
+    header p {
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 10px;
+    }
+
+    .top h2 {
+      color: #333;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #555;
+      color: white;
+      padding: 9px 14px;
+      border-radius: 7px;
+      font-size: 14px;
+    }
+
+    .form-box {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #ef6c00;
+    }
+
+    .required {
+      color: red;
+    }
+
+    .outward-number {
+      background: #fff3e0;
+      font-weight: bold;
+      color: #ef6c00;
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 14px;
+      background: #ef6c00;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .save-btn:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    .success {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .error {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      background: #ffebee;
+      color: #c62828;
+      border-radius: 8px;
+      font-weight: bold;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Hanawal Gram Panchayat</h1>
+  <p>Inward &amp; Outward Register</p>
+</header>
+
+<div class="container">
+
+  <div class="top">
+    <h2>📤 Outward Entry</h2>
+
+    <a href="dashboard.html" class="back-btn">
+      ← Dashboard
+    </a>
+  </div>
+
+  <div class="form-box">
+
+    <form id="outwardForm">
+
+      <!-- Outward Number -->
+      <div class="form-group">
+        <label>Outward Number</label>
+
+        <input
+          type="text"
+          id="outwardNo"
+          class="outward-number"
+          readonly
+        >
+      </div>
+
+      <!-- Date -->
+      <div class="form-group">
+        <label>
+          Date <span class="required">*</span>
+        </label>
+
+        <input
+          type="date"
+          id="date"
+          required
+        >
+      </div>
+
+      <!-- To -->
+      <div class="form-group">
+        <label>
+          To / Sent To <span class="required">*</span>
+        </label>
+
+        <input
+          type="text"
+          id="to"
+          placeholder="Example: Tahsildar Office"
+          required
+        >
+      </div>
+
+      <!-- Letter Number -->
+      <div class="form-group">
+        <label>
+          Letter / Reference Number
+          <span class="required">*</span>
+        </label>
+
+        <input
+          type="text"
+          id="letterNo"
+          placeholder="Enter letter number"
+          required
+        >
+      </div>
+
+      <!-- Subject -->
+      <div class="form-group">
+        <label>
+          Subject <span class="required">*</span>
+        </label>
+
+        <textarea
+          id="subject"
+          placeholder="Enter subject"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Sent By -->
+      <div class="form-group">
+        <label>Sent By</label>
+
+        <input
+          type="text"
+          id="sentBy"
+          placeholder="Enter name"
+        >
+      </div>
+
+      <!-- Delivery Mode -->
+      <div class="form-group">
+        <label>Delivery Mode</label>
+
+        <select id="deliveryMode">
+
+          <option value="">
+            Select delivery mode
+          </option>
+
+          <option value="Post">
+            Post
+          </option>
+
+          <option value="Registered Post">
+            Registered Post
+          </option>
+
+          <option value="Speed Post">
+            Speed Post
+          </option>
+
+          <option value="Email">
+            Email
+          </option>
+
+          <option value="Hand Delivery">
+            Hand Delivery
+          </option>
+
+          <option value="Other">
+            Other
+          </option>
+
+        </select>
+      </div>
+
+      <!-- Remarks -->
+      <div class="form-group">
+        <label>Remarks</label>
+
+        <textarea
+          id="remarks"
+          placeholder="Enter remarks"
+        ></textarea>
+      </div>
+
+      <!-- Upload -->
+      <div class="form-group">
+        <label>Upload Document</label>
+
+        <input
+          type="file"
+          id="document"
+          accept=".pdf,.jpg,.jpeg,.png"
+        >
+      </div>
+
+      <!-- Save -->
+      <button
+        type="submit"
+        class="save-btn"
+        id="saveBtn"
+      >
+        💾 Save Outward
+      </button>
+
+      <div
+        id="successMessage"
+        class="success"
+      >
+        Outward record saved successfully!
+      </div>
+
+      <div
+        id="errorMessage"
+        class="error"
+      ></div>
+
+    </form>
+
+  </div>
+
+</div>
+
 <script>
+
+/* =====================================
+   SUPABASE CONFIGURATION
+===================================== */
 
 const SUPABASE_URL =
   "https://hmexumitktsxswcqdeef.supabase.co";
@@ -6,13 +350,23 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
   "sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
 
+
+/* =====================================
+   TODAY'S DATE
+===================================== */
+
 const today =
-  new Date().toISOString().split("T")[0];
+  new Date()
+    .toISOString()
+    .split("T")[0];
 
 document.getElementById("date").value = today;
 
 
-/* Get existing records */
+/* =====================================
+   GET RECORDS
+===================================== */
+
 async function getRecords() {
 
   const response = await fetch(
@@ -20,200 +374,328 @@ async function getRecords() {
     "/rest/v1/register_records?select=id,type,number,date",
     {
       method: "GET",
+
       headers: {
         "apikey": SUPABASE_ANON_KEY,
-        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+
+        "Authorization":
+          "Bearer " + SUPABASE_ANON_KEY
       }
     }
   );
 
-  const text = await response.text();
+  const responseText =
+    await response.text();
 
   if (!response.ok) {
+
     throw new Error(
       "Supabase GET " +
       response.status +
       ": " +
-      text
+      responseText
     );
   }
 
-  return text ? JSON.parse(text) : [];
+  return responseText
+    ? JSON.parse(responseText)
+    : [];
 }
 
 
-/* Next Outward Number */
+/* =====================================
+   GET NEXT OUTWARD NUMBER
+===================================== */
+
 async function getNextOutwardNumber() {
 
   try {
 
-    const records = await getRecords();
+    const records =
+      await getRecords();
 
-    const outwardRecords = records.filter(
-      r =>
-        String(r.type || "").toLowerCase() === "outward"
+    const outwardNumbers =
+      records
+        .filter(record =>
+          String(record.type || "")
+            .toLowerCase() === "outward"
+        )
+        .map(record => record.number)
+        .filter(Boolean);
+
+    let nextNumber = 1;
+
+    while (
+      outwardNumbers.includes(
+        "OUT-" +
+        String(nextNumber).padStart(3, "0")
+      )
+    ) {
+      nextNumber++;
+    }
+
+    return (
+      "OUT-" +
+      String(nextNumber).padStart(3, "0")
     );
-
-    return "OUT-" +
-      String(outwardRecords.length + 1).padStart(3, "0");
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Number Error:",
+      error
+    );
 
     return "OUT-001";
   }
 }
 
 
-/* Load first number */
-getNextOutwardNumber().then(number => {
+/* =====================================
+   LOAD OUTWARD NUMBER
+===================================== */
 
-  document.getElementById("outwardNo").value = number;
-
-});
-
-
-/* Save Outward */
-document.getElementById("outwardForm")
-.addEventListener("submit", async function(event) {
-
-  event.preventDefault();
-
-  const saveBtn =
-    document.getElementById("saveBtn");
-
-  const success =
-    document.getElementById("successMessage");
-
-  const errorBox =
-    document.getElementById("errorMessage");
-
-  success.style.display = "none";
-  errorBox.style.display = "none";
-
-  saveBtn.disabled = true;
-  saveBtn.textContent = "Saving...";
-
-  try {
-
-    const record = {
-
-      type: "Outward",
-
-      number:
-        document.getElementById("outwardNo").value,
-
-      date:
-        document.getElementById("date").value,
-
-      name:
-        document.getElementById("to").value.trim(),
-
-      letter_no:
-        document.getElementById("letterNo").value.trim(),
-
-      subject:
-        document.getElementById("subject").value.trim(),
-
-      person:
-        document.getElementById("sentBy").value.trim(),
-
-      delivery:
-        document.getElementById("deliveryMode").value
-
-    };
-
-
-    console.log("Sending Outward:", record);
-
-
-    const response = await fetch(
-      SUPABASE_URL +
-      "/rest/v1/register_records",
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-          "Prefer": "return=representation"
-        },
-
-        body: JSON.stringify(record)
-      }
-    );
-
-
-    const responseText =
-      await response.text();
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        "Supabase POST " +
-        response.status +
-        ": " +
-        responseText
-      );
-
-    }
-
-
-    console.log(
-      "Outward saved:",
-      responseText
-    );
-
-
-    success.textContent =
-      "✅ Outward record saved successfully!";
-
-    success.style.display = "block";
-
-
-    document.getElementById(
-      "outwardForm"
-    ).reset();
-
-
-    document.getElementById(
-      "date"
-    ).value = today;
-
-
-    const nextNumber =
-      await getNextOutwardNumber();
-
+getNextOutwardNumber()
+  .then(function(number) {
 
     document.getElementById(
       "outwardNo"
-    ).value = nextNumber;
+    ).value = number;
+
+  });
 
 
-  } catch (error) {
+/* =====================================
+   SAVE OUTWARD
+===================================== */
 
-    console.error(
-      "OUTWARD SAVE ERROR:",
-      error
-    );
+document.getElementById(
+  "outwardForm"
+).addEventListener(
+  "submit",
+  async function(event) {
 
-    errorBox.textContent =
-      "❌ " + error.message;
+    event.preventDefault();
 
-    errorBox.style.display = "block";
+    const saveBtn =
+      document.getElementById(
+        "saveBtn"
+      );
 
-  } finally {
+    const success =
+      document.getElementById(
+        "successMessage"
+      );
 
-    saveBtn.disabled = false;
+    const errorBox =
+      document.getElementById(
+        "errorMessage"
+      );
+
+    success.style.display =
+      "none";
+
+    errorBox.style.display =
+      "none";
+
+    saveBtn.disabled =
+      true;
 
     saveBtn.textContent =
-      "💾 Save Outward";
+      "Saving...";
 
-  }
 
-});
+    try {
+
+      /* ===============================
+         CREATE OUTWARD RECORD
+      =============================== */
+
+      const record = {
+
+        type:
+          "Outward",
+
+        number:
+          document.getElementById(
+            "outwardNo"
+          ).value,
+
+        date:
+          document.getElementById(
+            "date"
+          ).value,
+
+        name:
+          document.getElementById(
+            "to"
+          ).value.trim(),
+
+        "Letter _no":
+          document.getElementById(
+            "letterNo"
+          ).value.trim(),
+
+        subject:
+          document.getElementById(
+            "subject"
+          ).value.trim(),
+
+        person:
+          document.getElementById(
+            "sentBy"
+          ).value.trim(),
+
+        delivery:
+          document.getElementById(
+            "deliveryMode"
+          ).value
+
+      };
+
+
+      console.log(
+        "Outward record:",
+        record
+      );
+
+
+      /* ===============================
+         POST TO SUPABASE
+      =============================== */
+
+      const response =
+        await fetch(
+
+          SUPABASE_URL +
+          "/rest/v1/register_records",
+
+          {
+            method: "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json",
+
+              "apikey":
+                SUPABASE_ANON_KEY,
+
+              "Authorization":
+                "Bearer " +
+                SUPABASE_ANON_KEY,
+
+              "Prefer":
+                "return=representation"
+
+            },
+
+            body:
+              JSON.stringify(record)
+
+          }
+        );
+
+
+      const responseText =
+        await response.text();
+
+
+      /* ===============================
+         CHECK RESPONSE
+      =============================== */
+
+      if (!response.ok) {
+
+        throw new Error(
+          "Supabase POST " +
+          response.status +
+          ": " +
+          responseText
+        );
+
+      }
+
+
+      console.log(
+        "Outward saved successfully:",
+        responseText
+      );
+
+
+      /* ===============================
+         SUCCESS
+      =============================== */
+
+      success.textContent =
+        "✅ Outward record saved successfully!";
+
+      success.style.display =
+        "block";
+
+
+      /* ===============================
+         RESET FORM
+      =============================== */
+
+      document.getElementById(
+        "outwardForm"
+      ).reset();
+
+
+      document.getElementById(
+        "date"
+      ).value =
+        today;
+
+
+      /* ===============================
+         NEW OUTWARD NUMBER
+      =============================== */
+
+      const nextNumber =
+        await getNextOutwardNumber();
+
+
+      document.getElementById(
+        "outwardNo"
+      ).value =
+        nextNumber;
+
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "OUTWARD SAVE ERROR:",
+        error
+      );
+
+
+      errorBox.textContent =
+        "❌ Save failed:\n" +
+        error.message;
+
+
+      errorBox.style.display =
+        "block";
+
+    }
+
+    finally {
+
+      saveBtn.disabled =
+        false;
+
+      saveBtn.textContent =
+        "💾 Save Outward";
+
+    }
+
+  });
 
 </script>
+
+</body>
+</html>
