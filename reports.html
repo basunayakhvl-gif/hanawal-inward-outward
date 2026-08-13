@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,44 +8,220 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#f4f7f4;min-height:100vh;color:#333}
-header{background:#00838f;color:#fff;padding:16px 20px}
+
+header{
+  background:#00838f;
+  color:#fff;
+  padding:16px 20px
+}
 header h1{font-size:20px}
 header p{font-size:13px;margin-top:4px}
-.container{max-width:1400px;margin:auto;padding:20px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}
-.back{background:#555;color:#fff;text-decoration:none;padding:9px 14px;border-radius:7px}
-.status{display:none;padding:12px;margin-bottom:15px;border-radius:8px;white-space:pre-wrap;word-break:break-word}
+
+.container{
+  max-width:1400px;
+  margin:auto;
+  padding:20px
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px
+}
+
+.back{
+  background:#555;
+  color:#fff;
+  text-decoration:none;
+  padding:9px 14px;
+  border-radius:7px
+}
+
+.status{
+  display:none;
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:8px;
+  white-space:pre-wrap;
+  word-break:break-word
+}
+
 .loading{background:#e3f2fd;color:#1565c0}
 .success{background:#e8f5e9;color:#2e7d32}
 .error{background:#ffebee;color:#c62828}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}
-.card{background:#fff;border-radius:14px;padding:20px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.08)}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:20px
+}
+
+.card{
+  background:#fff;
+  border-radius:14px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 3px 12px rgba(0,0,0,.08)
+}
+
 .icon{font-size:28px}
-.card h3{font-size:14px;color:#666;margin:7px 0}
-.num{font-size:30px;font-weight:bold;color:#00838f}
-.filter{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 12px rgba(0,0,0,.08);margin-bottom:20px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
-select,input,textarea{width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;font-size:14px}
-textarea{min-height:80px;resize:vertical}
-.buttons{display:flex;gap:10px;margin-top:15px}
-button{border:0;border-radius:8px;padding:11px 18px;font-weight:bold;cursor:pointer}
-.apply{background:#00838f;color:#fff}
-.clear{background:#e0e0e0}
-.print{background:#37474f;color:#fff}
-.tablebox{background:#fff;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.08);overflow-x:auto}
-.title{padding:15px 18px;border-bottom:1px solid #ddd;font-weight:bold}
-table{width:100%;border-collapse:collapse;min-width:1150px}
-th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px;vertical-align:top}
-th{background:#f5f5f5}
-.inward{color:#1565c0;font-weight:bold}
-.outward{color:#ef6c00;font-weight:bold}
-.empty{text-align:center;padding:30px;color:#777}
-.action-buttons{display:flex;gap:6px;flex-wrap:wrap}
-.view-btn{background:#1565c0;color:#fff}
-.edit-btn{background:#f9a825;color:#fff}
-.delete-btn{background:#c62828;color:#fff}
-.small-btn{padding:7px 9px;font-size:12px}
+
+.card h3{
+  font-size:14px;
+  color:#666;
+  margin:7px 0
+}
+
+.num{
+  font-size:30px;
+  font-weight:bold;
+  color:#00838f
+}
+
+.filter{
+  background:#fff;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 3px 12px rgba(0,0,0,.08);
+  margin-bottom:20px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px
+}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:6px
+}
+
+select,
+input,
+textarea{
+  width:100%;
+  padding:11px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:14px
+}
+
+textarea{
+  min-height:80px;
+  resize:vertical
+}
+
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:15px
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:11px 18px;
+  font-weight:bold;
+  cursor:pointer
+}
+
+.apply{
+  background:#00838f;
+  color:#fff
+}
+
+.clear{
+  background:#e0e0e0
+}
+
+.print{
+  background:#37474f;
+  color:#fff
+}
+
+.tablebox{
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 3px 12px rgba(0,0,0,.08);
+  overflow-x:auto
+}
+
+.title{
+  padding:15px 18px;
+  border-bottom:1px solid #ddd;
+  font-weight:bold
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:1200px
+}
+
+th,
+td{
+  padding:11px;
+  border-bottom:1px solid #eee;
+  text-align:left;
+  font-size:13px;
+  vertical-align:top
+}
+
+th{
+  background:#f5f5f5
+}
+
+.inward{
+  color:#1565c0;
+  font-weight:bold
+}
+
+.outward{
+  color:#ef6c00;
+  font-weight:bold
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#777
+}
+
+.action-buttons{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap
+}
+
+.view-btn{
+  background:#1565c0;
+  color:#fff;
+  text-decoration:none
+}
+
+.edit-btn{
+  background:#f9a825;
+  color:#fff
+}
+
+.delete-btn{
+  background:#c62828;
+  color:#fff
+}
+
+.small-btn{
+  padding:7px 9px;
+  font-size:12px
+}
+
+/* EDIT MODAL */
+
 .modal{
   display:none;
   position:fixed;
@@ -56,37 +231,95 @@ th{background:#f5f5f5}
   width:100%;
   height:100%;
   background:rgba(0,0,0,.55);
-  overflow:auto;
+  overflow:auto
 }
+
 .modal-box{
   background:#fff;
   max-width:650px;
   margin:40px auto;
   padding:22px;
   border-radius:14px;
-  box-shadow:0 5px 25px rgba(0,0,0,.25);
+  box-shadow:0 5px 25px rgba(0,0,0,.25)
 }
-.modal-box h3{margin-bottom:18px}
-.form-group{margin-bottom:14px}
-.modal-actions{display:flex;gap:10px;margin-top:18px}
-.save-edit{background:#2e7d32;color:#fff}
-.cancel-edit{background:#777;color:#fff}
-.document-link{margin-top:7px;font-size:13px}
-.document-link a{color:#1565c0;font-weight:bold}
+
+.modal-box h3{
+  margin-bottom:18px
+}
+
+.form-group{
+  margin-bottom:14px
+}
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:18px
+}
+
+.save-edit{
+  background:#2e7d32;
+  color:#fff
+}
+
+.cancel-edit{
+  background:#777;
+  color:#fff
+}
+
+.document-link{
+  margin-top:7px;
+  font-size:13px
+}
+
+.document-link a{
+  color:#1565c0;
+  font-weight:bold
+}
+
 @media(max-width:700px){
-  .cards{grid-template-columns:1fr 1fr}
-  .grid{grid-template-columns:1fr}
-  .buttons{flex-direction:column}
-  button{width:100%}
-  .modal-box{margin:20px 10px}
+
+  .cards{
+    grid-template-columns:1fr 1fr
+  }
+
+  .grid{
+    grid-template-columns:1fr
+  }
+
+  .buttons{
+    flex-direction:column
+  }
+
+  .modal-box{
+    margin:20px 10px
+  }
 }
+
 @media(max-width:430px){
-  .cards{grid-template-columns:1fr}
+
+  .cards{
+    grid-template-columns:1fr
+  }
 }
+
 @media print{
-  header,.top,.filter,.status,.action-column{display:none!important}
-  .container{padding:0}
-  .tablebox{box-shadow:none}
+
+  header,
+  .top,
+  .filter,
+  .status,
+  .action-column{
+    display:none!important
+  }
+
+  .container{
+    padding:0
+  }
+
+  .tablebox{
+    box-shadow:none
+  }
 }
 </style>
 </head>
@@ -105,11 +338,19 @@ th{background:#f5f5f5}
 <a href="dashboard.html" class="back">← Dashboard</a>
 </div>
 
-<div id="loading" class="status loading">Loading records...</div>
+<div id="loading" class="status loading">
+Loading records...
+</div>
+
 <div id="success" class="status success"></div>
+
 <div id="error" class="status error"></div>
 
+
+<!-- SUMMARY -->
+
 <div class="cards">
+
 <div class="card">
 <div class="icon">📋</div>
 <h3>Total Records</h3>
@@ -127,7 +368,11 @@ th{background:#f5f5f5}
 <h3>Total Outward</h3>
 <div id="outward" class="num">0</div>
 </div>
+
 </div>
+
+
+<!-- FILTER -->
 
 <div class="filter">
 
@@ -135,10 +380,13 @@ th{background:#f5f5f5}
 
 <div>
 <label>Register Type</label>
+
 <select id="type">
+
 <option value="">All</option>
 <option value="Inward">Inward</option>
 <option value="Outward">Outward</option>
+
 </select>
 </div>
 
@@ -154,24 +402,41 @@ th{background:#f5f5f5}
 
 </div>
 
+
 <div class="buttons">
-<button class="apply" onclick="applyFilter()">🔎 Apply Filter</button>
-<button class="clear" onclick="clearFilter()">Clear</button>
-<button class="print" onclick="window.print()">🖨️ Print / PDF</button>
+
+<button class="apply" onclick="applyFilter()">
+🔎 Apply Filter
+</button>
+
+<button class="clear" onclick="clearFilter()">
+Clear
+</button>
+
+<button class="print" onclick="window.print()">
+🖨️ Print / PDF
+</button>
+
 </div>
 
 </div>
+
+
+<!-- TABLE -->
 
 <div class="tablebox">
 
 <div class="title">
-Register Records <span id="count"></span>
+Register Records
+<span id="count"></span>
 </div>
 
 <table>
 
 <thead>
+
 <tr>
+
 <th>Type</th>
 <th>Number</th>
 <th>Date</th>
@@ -182,16 +447,23 @@ Register Records <span id="count"></span>
 <th>Delivery</th>
 <th>Document</th>
 <th class="action-column">Actions</th>
+
 </tr>
+
 </thead>
 
 <tbody id="results">
+
 <tr>
-<td colspan="10" class="empty">Loading...</td>
+<td colspan="10" class="empty">
+Loading...
+</td>
 </tr>
+
 </tbody>
 
 </table>
+
 </div>
 
 </div>
@@ -207,62 +479,134 @@ Register Records <span id="count"></span>
 
 <input type="hidden" id="editId">
 
+
 <div class="form-group">
+
 <label>Register Number</label>
-<input id="editNumber" readonly>
+
+<input
+id="editNumber"
+readonly
+>
+
 </div>
 
+
 <div class="form-group">
+
 <label>Date</label>
-<input type="date" id="editDate">
+
+<input
+type="date"
+id="editDate"
+>
+
 </div>
 
+
 <div class="form-group">
+
 <label>Name / From / To</label>
-<input id="editName">
+
+<input
+id="editName"
+>
+
 </div>
 
+
 <div class="form-group">
+
 <label>Letter Number</label>
-<input id="editLetterNo">
+
+<input
+id="editLetterNo"
+>
+
 </div>
 
+
 <div class="form-group">
+
 <label>Subject</label>
-<textarea id="editSubject"></textarea>
+
+<textarea
+id="editSubject"
+></textarea>
+
 </div>
 
+
 <div class="form-group">
+
 <label>Person</label>
-<input id="editPerson">
+
+<input
+id="editPerson"
+>
+
 </div>
 
+
 <div class="form-group">
+
 <label>Delivery</label>
+
 <select id="editDelivery">
-<option value="">Select delivery mode</option>
+
+<option value="">
+Select delivery mode
+</option>
+
 <option>Post</option>
 <option>Registered Post</option>
 <option>Speed Post</option>
 <option>Email</option>
 <option>Hand Delivery</option>
 <option>Other</option>
+
 </select>
+
 </div>
+
 
 <div class="form-group">
+
 <label>Remarks</label>
-<textarea id="editRemarks"></textarea>
+
+<textarea
+id="editRemarks"
+></textarea>
+
 </div>
 
-<div id="editDocument" class="document-link"></div>
+
+<div
+id="editDocument"
+class="document-link"
+></div>
+
 
 <div class="modal-actions">
-<button class="save-edit" onclick="saveEdit()">💾 Save Changes</button>
-<button class="cancel-edit" onclick="closeEdit()">Cancel</button>
+
+<button
+class="save-edit"
+onclick="saveEdit()"
+>
+💾 Save Changes
+</button>
+
+<button
+class="cancel-edit"
+onclick="closeEdit()"
+>
+Cancel
+</button>
+
 </div>
 
 </div>
+
 </div>
 
 
@@ -281,12 +625,18 @@ let allRecords = [];
    ESCAPE HTML
 ========================= */
 
-function esc(v){
+function esc(value){
 
-if(v===null || v===undefined)
+if(
+value === null ||
+value === undefined
+){
+
 return "";
 
-return String(v)
+}
+
+return String(value)
 .replace(/&/g,"&amp;")
 .replace(/</g,"&lt;")
 .replace(/>/g,"&gt;")
@@ -300,14 +650,13 @@ return String(v)
    LETTER NUMBER
 ========================= */
 
-function letterNo(r){
+function letterNo(record){
 
-return r["Letter _no"]
-?? r["Letter_no"]
-?? r["letter_no"]
-?? r["Letter No"]
-?? r["letter number"]
-?? "";
+return record.letter_no ??
+record["Letter _no"] ??
+record["Letter_no"] ??
+record["Letter No"] ??
+"";
 
 }
 
@@ -316,11 +665,11 @@ return r["Letter _no"]
    NAME
 ========================= */
 
-function nameValue(r){
+function nameValue(record){
 
-return r.name
-?? r.Name
-?? "";
+return record.name ??
+record.Name ??
+"";
 
 }
 
@@ -340,66 +689,100 @@ document.getElementById("success");
 const error =
 document.getElementById("error");
 
-loading.style.display="block";
-success.style.display="none";
-error.style.display="none";
+loading.style.display =
+"block";
+
+success.style.display =
+"none";
+
+error.style.display =
+"none";
+
 
 try{
 
-const url =
-SUPABASE_URL +
-"/rest/v1/register_records?select=*&order=created_at.desc";
-
 const response =
-await fetch(url,{
+await fetch(
+
+SUPABASE_URL +
+"/rest/v1/register_records?select=*&order=created_at.desc",
+
+{
 
 method:"GET",
 
 headers:{
-"apikey":SUPABASE_ANON_KEY,
+
+"apikey":
+SUPABASE_ANON_KEY,
+
 "Authorization":
-"Bearer "+SUPABASE_ANON_KEY,
-"Accept":"application/json"
+"Bearer " +
+SUPABASE_ANON_KEY,
+
+"Accept":
+"application/json"
+
 }
 
-});
+}
+
+);
+
 
 const text =
 await response.text();
 
+
 if(!response.ok){
 
 throw new Error(
-"Supabase GET "+
-response.status+
-": "+
+"Supabase GET " +
+response.status +
+": " +
 text
 );
 
 }
 
+
 allRecords =
-text ? JSON.parse(text) : [];
+text
+? JSON.parse(text)
+: [];
 
-updateSummary(allRecords);
 
-displayRecords(allRecords);
+updateSummary(
+allRecords
+);
+
+displayRecords(
+allRecords
+);
+
 
 success.textContent =
-"✅ "+allRecords.length+
+"✅ " +
+allRecords.length +
 " records loaded successfully.";
 
-success.style.display="block";
+success.style.display =
+"block";
 
-}catch(err){
 
-console.error(err);
+}catch(errorObject){
+
+console.error(
+errorObject
+);
 
 error.textContent =
-"❌ Records load ಆಗಲಿಲ್ಲ.\n\n"+
-err.message;
+"❌ Records load ಆಗಲಿಲ್ಲ.\n\n" +
+errorObject.message;
 
-error.style.display="block";
+error.style.display =
+"block";
+
 
 document.getElementById(
 "results"
@@ -408,7 +791,8 @@ document.getElementById(
 
 }finally{
 
-loading.style.display="none";
+loading.style.display =
+"none";
 
 }
 
@@ -422,25 +806,39 @@ loading.style.display="none";
 function updateSummary(records){
 
 const inward =
-records.filter(r =>
-String(r.type||"")
-.toLowerCase()==="inward"
+records.filter(
+record =>
+String(record.type || "")
+.toLowerCase() ===
+"inward"
 ).length;
+
 
 const outward =
-records.filter(r =>
-String(r.type||"")
-.toLowerCase()==="outward"
+records.filter(
+record =>
+String(record.type || "")
+.toLowerCase() ===
+"outward"
 ).length;
 
-document.getElementById("total")
-.textContent=records.length;
 
-document.getElementById("inward")
-.textContent=inward;
+document.getElementById(
+"total"
+).textContent =
+records.length;
 
-document.getElementById("outward")
-.textContent=outward;
+
+document.getElementById(
+"inward"
+).textContent =
+inward;
+
+
+document.getElementById(
+"outward"
+).textContent =
+outward;
 
 }
 
@@ -452,35 +850,62 @@ document.getElementById("outward")
 function applyFilter(){
 
 const type =
-document.getElementById("type")
-.value.toLowerCase();
+document.getElementById(
+"type"
+).value.toLowerCase();
 
 const from =
-document.getElementById("fromDate")
-.value;
+document.getElementById(
+"fromDate"
+).value;
 
 const to =
-document.getElementById("toDate")
-.value;
+document.getElementById(
+"toDate"
+).value;
+
 
 const filtered =
-allRecords.filter(r=>{
+allRecords.filter(
+record => {
 
-const rt =
-String(r.type||"")
-.toLowerCase();
+const recordType =
+String(
+record.type || ""
+).toLowerCase();
 
-const d =
-String(r.date||"")
-.substring(0,10);
+const recordDate =
+String(
+record.date || ""
+).substring(
+0,
+10
+);
 
-return (!type || rt===type) &&
-(!from || d>=from) &&
-(!to || d<=to);
+
+return (
+
+!type ||
+recordType === type
+
+) && (
+
+!from ||
+recordDate >= from
+
+) && (
+
+!to ||
+recordDate <= to
+
+);
 
 });
 
-displayRecords(filtered);
+
+displayRecords(
+filtered
+);
 
 }
 
@@ -491,16 +916,27 @@ displayRecords(filtered);
 
 function clearFilter(){
 
-document.getElementById("type")
-.value="";
+document.getElementById(
+"type"
+).value =
+"";
 
-document.getElementById("fromDate")
-.value="";
 
-document.getElementById("toDate")
-.value="";
+document.getElementById(
+"fromDate"
+).value =
+"";
 
-displayRecords(allRecords);
+
+document.getElementById(
+"toDate"
+).value =
+"";
+
+
+displayRecords(
+allRecords
+);
 
 }
 
@@ -509,14 +945,23 @@ displayRecords(allRecords);
    DISPLAY RECORDS
 ========================= */
 
-function displayRecords(records){
+function displayRecords(
+records
+){
 
 const tbody =
-document.getElementById("results");
+document.getElementById(
+"results"
+);
 
-document.getElementById("count")
-.textContent =
-" ("+records.length+" records)";
+
+document.getElementById(
+"count"
+).textContent =
+" (" +
+records.length +
+" records)";
+
 
 if(!records.length){
 
@@ -527,14 +972,21 @@ return;
 
 }
 
+
 tbody.innerHTML =
-records.map(r=>{
+records.map(
+record => {
+
 
 const type =
-String(r.type||"");
+String(
+record.type || ""
+);
 
-const cls =
-type.toLowerCase()==="inward"
+
+const className =
+type.toLowerCase() ===
+"inward"
 ? "inward"
 : "outward";
 
@@ -543,54 +995,55 @@ let documentHtml =
 "No document";
 
 
-if(r.document_url){
+if(record.document_url){
 
 documentHtml =
-`<div class="action-buttons">
-<a
-href="${esc(r.document_url)}"
+
+`<a
+href="${esc(record.document_url)}"
 target="_blank"
 class="view-btn small-btn"
 >
 👁️ View
-</a>
-</div>`;
+</a>`;
 
 }
 
 
-return `<tr>
+return `
 
-<td class="${cls}">
+<tr>
+
+<td class="${className}">
 ${esc(type)}
 </td>
 
 <td>
-${esc(r.number)}
+${esc(record.number)}
 </td>
 
 <td>
-${esc(r.date)}
+${esc(record.date)}
 </td>
 
 <td>
-${esc(nameValue(r))}
+${esc(nameValue(record))}
 </td>
 
 <td>
-${esc(letterNo(r))}
+${esc(letterNo(record))}
 </td>
 
 <td>
-${esc(r.subject)}
+${esc(record.subject)}
 </td>
 
 <td>
-${esc(r.person)}
+${esc(record.person)}
 </td>
 
 <td>
-${esc(r.delivery)}
+${esc(record.delivery)}
 </td>
 
 <td>
@@ -603,14 +1056,14 @@ ${documentHtml}
 
 <button
 class="edit-btn small-btn"
-onclick="openEdit('${esc(r.id)}')"
+onclick="openEdit('${esc(record.id)}')"
 >
 ✏️ Edit
 </button>
 
 <button
 class="delete-btn small-btn"
-onclick="deleteRecord('${esc(r.id)}')"
+onclick="deleteRecord('${esc(record.id)}')"
 >
 🗑️ Delete
 </button>
@@ -619,9 +1072,12 @@ onclick="deleteRecord('${esc(r.id)}')"
 
 </td>
 
-</tr>`;
+</tr>
 
-}).join("");
+`;
+
+}
+).join("");
 
 }
 
@@ -633,54 +1089,88 @@ onclick="deleteRecord('${esc(r.id)}')"
 function openEdit(id){
 
 const record =
-allRecords.find(r =>
-String(r.id)===String(id)
+allRecords.find(
+item =>
+String(item.id) ===
+String(id)
 );
+
 
 if(!record){
 
-alert("Record not found.");
+alert(
+"Record not found."
+);
 
 return;
 
 }
 
 
-document.getElementById("editId")
-.value=record.id;
-
-document.getElementById("editNumber")
-.value=record.number || "";
-
-document.getElementById("editDate")
-.value=record.date || "";
-
-document.getElementById("editName")
-.value=nameValue(record);
-
-document.getElementById("editLetterNo")
-.value=letterNo(record);
-
-document.getElementById("editSubject")
-.value=record.subject || "";
-
-document.getElementById("editPerson")
-.value=record.person || "";
-
-document.getElementById("editDelivery")
-.value=record.delivery || "";
-
-document.getElementById("editRemarks")
-.value=record.remarks || "";
+document.getElementById(
+"editId"
+).value =
+record.id;
 
 
-const docBox =
-document.getElementById("editDocument");
+document.getElementById(
+"editNumber"
+).value =
+record.number || "";
+
+
+document.getElementById(
+"editDate"
+).value =
+record.date || "";
+
+
+document.getElementById(
+"editName"
+).value =
+nameValue(record);
+
+
+document.getElementById(
+"editLetterNo"
+).value =
+letterNo(record);
+
+
+document.getElementById(
+"editSubject"
+).value =
+record.subject || "";
+
+
+document.getElementById(
+"editPerson"
+).value =
+record.person || "";
+
+
+document.getElementById(
+"editDelivery"
+).value =
+record.delivery || "";
+
+
+document.getElementById(
+"editRemarks"
+).value =
+record.remarks || "";
+
+
+const documentBox =
+document.getElementById(
+"editDocument"
+);
 
 
 if(record.document_url){
 
-docBox.innerHTML =
+documentBox.innerHTML =
+
 `📎 Current document:
 <a
 href="${esc(record.document_url)}"
@@ -691,7 +1181,7 @@ View Document
 
 }else{
 
-docBox.textContent =
+documentBox.textContent =
 "No document attached.";
 
 }
@@ -699,7 +1189,8 @@ docBox.textContent =
 
 document.getElementById(
 "editModal"
-).style.display="block";
+).style.display =
+"block";
 
 }
 
@@ -712,7 +1203,8 @@ function closeEdit(){
 
 document.getElementById(
 "editModal"
-).style.display="none";
+).style.display =
+"none";
 
 }
 
@@ -724,49 +1216,60 @@ document.getElementById(
 async function saveEdit(){
 
 const id =
-document.getElementById("editId")
-.value;
-
-if(!id){
-
-alert("Record ID missing.");
-
-return;
-
-}
+document.getElementById(
+"editId"
+).value;
 
 
 const updatedRecord = {
 
 date:
-document.getElementById("editDate")
-.value,
+document.getElementById(
+"editDate"
+).value,
 
 name:
-document.getElementById("editName")
-.value.trim(),
+document.getElementById(
+"editName"
+).value.trim(),
 
 letter_no:
-document.getElementById("editLetterNo")
-.value.trim(),
+document.getElementById(
+"editLetterNo"
+).value.trim(),
 
 subject:
-document.getElementById("editSubject")
-.value.trim(),
+document.getElementById(
+"editSubject"
+).value.trim(),
 
 person:
-document.getElementById("editPerson")
-.value.trim(),
+document.getElementById(
+"editPerson"
+).value.trim(),
 
 delivery:
-document.getElementById("editDelivery")
-.value,
+document.getElementById(
+"editDelivery"
+).value,
 
 remarks:
-document.getElementById("editRemarks")
-.value.trim()
+document.getElementById(
+"editRemarks"
+).value.trim()
 
 };
+
+
+if(!id){
+
+alert(
+"Record ID missing."
+);
+
+return;
+
+}
 
 
 if(
@@ -799,12 +1302,15 @@ try{
 
 const response =
 await fetch(
-SUPABASE_URL+
-"/rest/v1/register_records?id=eq."+
+
+SUPABASE_URL +
+"/rest/v1/register_records?id=eq." +
 encodeURIComponent(id),
+
 {
 
-method:"PATCH",
+method:
+"PATCH",
 
 headers:{
 
@@ -815,7 +1321,8 @@ headers:{
 SUPABASE_ANON_KEY,
 
 "Authorization":
-"Bearer "+SUPABASE_ANON_KEY,
+"Bearer " +
+SUPABASE_ANON_KEY,
 
 "Prefer":
 "return=representation"
@@ -823,9 +1330,12 @@ SUPABASE_ANON_KEY,
 },
 
 body:
-JSON.stringify(updatedRecord)
+JSON.stringify(
+updatedRecord
+)
 
 }
+
 );
 
 
@@ -836,9 +1346,9 @@ await response.text();
 if(!response.ok){
 
 throw new Error(
-"Supabase UPDATE "+
-response.status+
-": "+
+"Supabase UPDATE " +
+response.status +
+": " +
 text
 );
 
@@ -847,20 +1357,24 @@ text
 
 closeEdit();
 
+
 alert(
 "✅ Record updated successfully."
 );
 
+
 await loadReports();
 
 
-}catch(error){
+}catch(errorObject){
 
-console.error(error);
+console.error(
+errorObject
+);
 
 alert(
-"❌ Edit failed:\n\n"+
-error.message
+"❌ Edit failed:\n\n" +
+errorObject.message
 );
 
 }
@@ -872,32 +1386,41 @@ error.message
    DELETE RECORD
 ========================= */
 
-async function deleteRecord(id){
+async function deleteRecord(
+id
+){
 
 const record =
-allRecords.find(r =>
-String(r.id)===String(id)
+allRecords.find(
+item =>
+String(item.id) ===
+String(id)
 );
+
 
 if(!record){
 
-alert("Record not found.");
+alert(
+"Record not found."
+);
 
 return;
 
 }
 
 
-const number =
-record.number || "this record";
-
-
 const confirmed =
 confirm(
-"⚠️ Delete this record?\n\n"+
-number+
-"\n\n"+
+
+"⚠️ Delete this record?\n\n" +
+
+(record.number ||
+"this record") +
+
+"\n\n" +
+
 "This action cannot be undone."
+
 );
 
 
@@ -912,12 +1435,15 @@ try{
 
 const response =
 await fetch(
-SUPABASE_URL+
-"/rest/v1/register_records?id=eq."+
+
+SUPABASE_URL +
+"/rest/v1/register_records?id=eq." +
 encodeURIComponent(id),
+
 {
 
-method:"DELETE",
+method:
+"DELETE",
 
 headers:{
 
@@ -925,7 +1451,7 @@ headers:{
 SUPABASE_ANON_KEY,
 
 "Authorization":
-"Bearer "+
+"Bearer " +
 SUPABASE_ANON_KEY,
 
 "Prefer":
@@ -934,6 +1460,7 @@ SUPABASE_ANON_KEY,
 }
 
 }
+
 );
 
 
@@ -944,9 +1471,9 @@ await response.text();
 if(!response.ok){
 
 throw new Error(
-"Supabase DELETE "+
-response.status+
-": "+
+"Supabase DELETE " +
+response.status +
+": " +
 text
 );
 
@@ -961,13 +1488,15 @@ alert(
 await loadReports();
 
 
-}catch(error){
+}catch(errorObject){
 
-console.error(error);
+console.error(
+errorObject
+);
 
 alert(
-"❌ Delete failed:\n\n"+
-error.message
+"❌ Delete failed:\n\n" +
+errorObject.message
 );
 
 }
@@ -976,8 +1505,7 @@ error.message
 
 
 /* =========================
-   CLOSE MODAL WHEN CLICKING
-   OUTSIDE
+   CLOSE MODAL OUTSIDE CLICK
 ========================= */
 
 window.addEventListener(
@@ -985,9 +1513,14 @@ window.addEventListener(
 function(event){
 
 const modal =
-document.getElementById("editModal");
+document.getElementById(
+"editModal"
+);
 
-if(event.target===modal){
+
+if(
+event.target === modal
+){
 
 closeEdit();
 
@@ -1003,11 +1536,14 @@ closeEdit();
 
 document.addEventListener(
 "DOMContentLoaded",
-loadReports
+function(){
+
+loadReports();
+
+}
 );
 
 </script>
 
 </body>
 </html>
-```
