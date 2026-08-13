@@ -1,35 +1,959 @@
-async function uploadDocument(file, number) {
-  if (!file) return { url: "", name: "" };
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+<title>Inward Entry - Hanawal Gram Panchayat</title>
 
-  const path =
-    number + "/" + Date.now() + "_" + safeName;
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  const { error } =
-    await supabaseClient.storage
-      .from("documents")
-      .upload(path, file, {
-        cacheControl: "3600",
-        upsert: true,
-        contentType:
-          file.type || "application/octet-stream"
-      });
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
 
-  if (error) {
-    throw new Error(
-      "Document upload failed: " +
-      error.message
-    );
+body {
+  background: #f4f7f4;
+  min-height: 100vh;
+}
+
+header {
+  background: #2e7d32;
+  color: white;
+  padding: 16px 20px;
+}
+
+header h1 {
+  font-size: 20px;
+}
+
+header p {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.top h2 {
+  color: #333;
+}
+
+.back {
+  text-decoration: none;
+  background: #555;
+  color: white;
+  padding: 9px 14px;
+  border-radius: 7px;
+  font-size: 14px;
+}
+
+.form-box {
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 7px;
+  font-size: 14px;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #1565c0;
+}
+
+.required {
+  color: red;
+}
+
+.number {
+  background: #e3f2fd;
+  font-weight: bold;
+  color: #1565c0;
+}
+
+.save {
+  width: 100%;
+  padding: 14px;
+  background: #2e7d32;
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.save:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.message {
+  display: none;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.file-note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.file-name {
+  margin-top: 7px;
+  font-size: 13px;
+  color: #1565c0;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .top {
+    align-items: flex-start;
   }
 
-  const { data } =
-    supabaseClient.storage
-      .from("documents")
+  .top h2 {
+    font-size: 18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Hanawal Gram Panchayat</h1>
+  <p>Inward &amp; Outward Register</p>
+</header>
+
+<div class="container">
+
+  <div class="top">
+    <h2>📥 Inward Entry</h2>
+
+    <a href="dashboard.html" class="back">
+      ← Dashboard
+    </a>
+  </div>
+
+  <div class="form-box">
+
+    <form id="registerForm">
+
+      <div class="group">
+        <label>Inward Number</label>
+
+        <input
+          id="registerNo"
+          class="number"
+          type="text"
+          readonly
+        >
+      </div>
+
+      <div class="group">
+        <label>
+          Date <span class="required">*</span>
+        </label>
+
+        <input
+          id="date"
+          type="date"
+          required
+        >
+      </div>
+
+      <div class="group">
+        <label>
+          From / Received From
+          <span class="required">*</span>
+        </label>
+
+        <input
+          id="from"
+          type="text"
+          placeholder="Example: Taluka Panchayat Gangavathi"
+          required
+        >
+      </div>
+
+      <div class="group">
+        <label>Letter / Reference Number</label>
+
+        <input
+          id="letterNo"
+          type="text"
+          placeholder="Enter letter number"
+        >
+      </div>
+
+      <div class="group">
+        <label>
+          Subject <span class="required">*</span>
+        </label>
+
+        <textarea
+          id="subject"
+          placeholder="Enter subject"
+          required
+        ></textarea>
+      </div>
+
+      <div class="group">
+        <label>Received By</label>
+
+        <input
+          id="receivedBy"
+          type="text"
+          placeholder="Enter name"
+        >
+      </div>
+
+      <div class="group">
+        <label>Delivery Mode</label>
+
+        <select id="deliveryMode">
+          <option value="">Select delivery mode</option>
+          <option value="Post">Post</option>
+          <option value="Registered Post">Registered Post</option>
+          <option value="Speed Post">Speed Post</option>
+          <option value="Email">Email</option>
+          <option value="Hand Delivery">Hand Delivery</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="group">
+        <label>Remarks</label>
+
+        <textarea
+          id="remarks"
+          placeholder="Enter remarks"
+        ></textarea>
+      </div>
+
+      <div class="group">
+        <label>Upload Document</label>
+
+        <input
+          type="file"
+          id="document"
+          accept=".pdf,.jpg,.jpeg,.png"
+        >
+
+        <div class="file-note">
+          PDF, JPG, JPEG, PNG — maximum 50 MB.
+        </div>
+
+        <div
+          id="fileName"
+          class="file-name"
+        ></div>
+      </div>
+
+      <button
+        type="submit"
+        class="save"
+        id="saveBtn"
+      >
+        💾 Save Inward
+      </button>
+
+      <div
+        id="successMessage"
+        class="message success"
+      ></div>
+
+      <div
+        id="errorMessage"
+        class="message error"
+      ></div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =====================================================
+   SUPABASE CONFIGURATION
+===================================================== */
+
+const SUPABASE_URL =
+  "https://hmexumitktsxswcqdeef.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
+
+const STORAGE_BUCKET =
+  "documents";
+
+
+/* =====================================================
+   SUPABASE CLIENT
+===================================================== */
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+/* =====================================================
+   TODAY
+===================================================== */
+
+const today =
+  new Date()
+    .toISOString()
+    .split("T")[0];
+
+document.getElementById("date").value =
+  today;
+
+
+/* =====================================================
+   FILE NAME DISPLAY
+===================================================== */
+
+document.getElementById("document")
+  .addEventListener("change", function() {
+
+    const file =
+      this.files[0];
+
+    const fileName =
+      document.getElementById("fileName");
+
+    if (file) {
+
+      fileName.textContent =
+        "📎 Selected: " + file.name;
+
+    } else {
+
+      fileName.textContent = "";
+
+    }
+
+  });
+
+
+/* =====================================================
+   GET EXISTING RECORDS
+===================================================== */
+
+async function getRecords() {
+
+  const response =
+    await fetch(
+      SUPABASE_URL +
+      "/rest/v1/register_records?select=id,type,number,date,created_at",
+      {
+        method: "GET",
+
+        headers: {
+          "apikey":
+            SUPABASE_ANON_KEY,
+
+          "Authorization":
+            "Bearer " +
+            SUPABASE_ANON_KEY,
+
+          "Accept":
+            "application/json"
+        }
+      }
+    );
+
+  const text =
+    await response.text();
+
+  if (!response.ok) {
+
+    throw new Error(
+      "Supabase GET " +
+      response.status +
+      ": " +
+      text
+    );
+
+  }
+
+  return text
+    ? JSON.parse(text)
+    : [];
+
+}
+
+
+/* =====================================================
+   GET NEXT INWARD NUMBER
+===================================================== */
+
+async function getNextNumber() {
+
+  try {
+
+    const records =
+      await getRecords();
+
+    let maxNumber = 0;
+
+    records.forEach(function(record) {
+
+      if (
+        String(record.type || "")
+          .toLowerCase() !== "inward"
+      ) {
+        return;
+      }
+
+      const match =
+        String(record.number || "")
+          .match(/^IN-(\d+)$/i);
+
+      if (match) {
+
+        maxNumber =
+          Math.max(
+            maxNumber,
+            Number(match[1])
+          );
+
+      }
+
+    });
+
+    return (
+      "IN-" +
+      String(maxNumber + 1)
+        .padStart(3, "0")
+    );
+
+  } catch (error) {
+
+    console.error(
+      "NUMBER ERROR:",
+      error
+    );
+
+    return "IN-001";
+
+  }
+
+}
+
+
+/* =====================================================
+   UPLOAD DOCUMENT
+===================================================== */
+
+async function uploadDocument(
+  file,
+  number
+) {
+
+  if (!file) {
+
+    return {
+      url: "",
+      name: ""
+    };
+
+  }
+
+
+  /* Maximum 50 MB */
+
+  if (
+    file.size >
+    50 * 1024 * 1024
+  ) {
+
+    throw new Error(
+      "Document must be 50 MB or smaller."
+    );
+
+  }
+
+
+  /* Safe file name */
+
+  const safeName =
+    file.name.replace(
+      /[^a-zA-Z0-9._-]/g,
+      "_"
+    );
+
+
+  /* Storage path */
+
+  const path =
+    number +
+    "/" +
+    Date.now() +
+    "_" +
+    safeName;
+
+
+  console.log(
+    "Uploading document:",
+    path
+  );
+
+
+  /* Supabase Storage Upload */
+
+  const result =
+    await supabaseClient
+      .storage
+      .from(STORAGE_BUCKET)
+      .upload(
+        path,
+        file,
+        {
+          cacheControl: "3600",
+          upsert: true,
+          contentType:
+            file.type ||
+            "application/octet-stream"
+        }
+      );
+
+
+  if (result.error) {
+
+    console.error(
+      "STORAGE ERROR:",
+      result.error
+    );
+
+    throw new Error(
+      "Document upload failed: " +
+      result.error.message
+    );
+
+  }
+
+
+  /* Get public URL */
+
+  const publicResult =
+    supabaseClient
+      .storage
+      .from(STORAGE_BUCKET)
       .getPublicUrl(path);
 
+
+  const publicUrl =
+    publicResult.data.publicUrl;
+
+
+  console.log(
+    "Document URL:",
+    publicUrl
+  );
+
+
   return {
-    url: data.publicUrl,
-    name: file.name
+
+    url:
+      publicUrl,
+
+    name:
+      file.name
+
   };
+
 }
+
+
+/* =====================================================
+   SAVE INWARD RECORD
+===================================================== */
+
+async function saveRecord(event) {
+
+  event.preventDefault();
+
+
+  const saveBtn =
+    document.getElementById(
+      "saveBtn"
+    );
+
+  const success =
+    document.getElementById(
+      "successMessage"
+    );
+
+  const errorBox =
+    document.getElementById(
+      "errorMessage"
+    );
+
+
+  success.style.display =
+    "none";
+
+  errorBox.style.display =
+    "none";
+
+
+  saveBtn.disabled =
+    true;
+
+  saveBtn.textContent =
+    "Saving...";
+
+
+  try {
+
+    const number =
+      document.getElementById(
+        "registerNo"
+      ).value.trim();
+
+
+    const file =
+      document.getElementById(
+        "document"
+      ).files[0];
+
+
+    const record = {
+
+      type:
+        "Inward",
+
+      number:
+        number,
+
+      date:
+        document.getElementById(
+          "date"
+        ).value,
+
+      name:
+        document.getElementById(
+          "from"
+        ).value.trim(),
+
+      letter_no:
+        document.getElementById(
+          "letterNo"
+        ).value.trim(),
+
+      subject:
+        document.getElementById(
+          "subject"
+        ).value.trim(),
+
+      person:
+        document.getElementById(
+          "receivedBy"
+        ).value.trim(),
+
+      delivery:
+        document.getElementById(
+          "deliveryMode"
+        ).value,
+
+      remarks:
+        document.getElementById(
+          "remarks"
+        ).value.trim(),
+
+      document_url:
+        "",
+
+      document_name:
+        ""
+
+    };
+
+
+    /* Required fields */
+
+    if (
+      !record.date ||
+      !record.name ||
+      !record.subject
+    ) {
+
+      throw new Error(
+        "Please fill all required fields."
+      );
+
+    }
+
+
+    /* Upload document first */
+
+    if (file) {
+
+      saveBtn.textContent =
+        "Uploading document...";
+
+
+      const uploaded =
+        await uploadDocument(
+          file,
+          number
+        );
+
+
+      record.document_url =
+        uploaded.url;
+
+      record.document_name =
+        uploaded.name;
+
+    }
+
+
+    console.log(
+      "Saving record:",
+      record
+    );
+
+
+    /* Save register record */
+
+    saveBtn.textContent =
+      "Saving record...";
+
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/register_records",
+        {
+          method: "POST",
+
+          headers: {
+
+            "Content-Type":
+              "application/json",
+
+            "apikey":
+              SUPABASE_ANON_KEY,
+
+            "Authorization":
+              "Bearer " +
+              SUPABASE_ANON_KEY,
+
+            "Prefer":
+              "return=representation"
+
+          },
+
+          body:
+            JSON.stringify(record)
+
+        }
+      );
+
+
+    const responseText =
+      await response.text();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Supabase POST " +
+        response.status +
+        ": " +
+        responseText
+      );
+
+    }
+
+
+    /* Success */
+
+    success.textContent =
+      file
+        ? "✅ Inward record and document saved successfully!"
+        : "✅ Inward record saved successfully!";
+
+    success.style.display =
+      "block";
+
+
+    /* Reset form */
+
+    document
+      .getElementById(
+        "registerForm"
+      )
+      .reset();
+
+
+    document.getElementById(
+      "date"
+    ).value =
+      today;
+
+
+    document.getElementById(
+      "fileName"
+    ).textContent =
+      "";
+
+
+    /* Next number */
+
+    const nextNumber =
+      await getNextNumber();
+
+
+    document.getElementById(
+      "registerNo"
+    ).value =
+      nextNumber;
+
+
+  } catch (error) {
+
+    console.error(
+      "INWARD SAVE ERROR:",
+      error
+    );
+
+
+    errorBox.textContent =
+      "❌ Save failed: " +
+      error.message;
+
+
+    errorBox.style.display =
+      "block";
+
+
+  } finally {
+
+    saveBtn.disabled =
+      false;
+
+    saveBtn.textContent =
+      "💾 Save Inward";
+
+  }
+
+}
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async function() {
+
+    try {
+
+      const nextNumber =
+        await getNextNumber();
+
+      document.getElementById(
+        "registerNo"
+      ).value =
+        nextNumber;
+
+    } catch (error) {
+
+      console.error(
+        error
+      );
+
+      document.getElementById(
+        "registerNo"
+      ).value =
+        "IN-001";
+
+    }
+
+
+    document
+      .getElementById(
+        "registerForm"
+      )
+      .addEventListener(
+        "submit",
+        saveRecord
+      );
+
+  }
+);
+
+</script>
+
+</body>
+</html>
+```
