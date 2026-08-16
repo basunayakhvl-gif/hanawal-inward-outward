@@ -266,4 +266,18 @@
       document.getElementById("errorMessage").style.display = "block";
     }
   });
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (username === "admin" && password === "1234") {
+    localStorage.setItem("loggedIn", "true");
+    window.location.href = "dashboard.html";
+  } else {
+    document.getElementById("errorMessage").style.display = "block";
+  }
+});
 </script>
