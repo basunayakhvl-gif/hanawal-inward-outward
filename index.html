@@ -10,39 +10,25 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
     document.getElementById("password").value;
 
   /*
-    Username remains:
-    admin
-
-    First/default password:
+    Default password for first login:
     1234
 
     After changing password from Dashboard,
-    the new password is stored in this browser.
+    the new password will be used automatically.
   */
 
   const savedPassword =
     localStorage.getItem("hanawalPassword") || "1234";
 
-  if (
-    username === "admin" &&
-    password === savedPassword
-  ) {
+  if (username === "admin" && password === savedPassword) {
 
-    localStorage.setItem(
-      "loggedIn",
-      "true"
-    );
+    localStorage.setItem("loggedIn", "true");
 
-    alert("Login successful!");
-
-    window.location.href =
-      "dashboard.html";
+    window.location.href = "dashboard.html";
 
   } else {
 
-    document.getElementById(
-      "errorMessage"
-    ).style.display = "block";
+    document.getElementById("errorMessage").style.display = "block";
 
   }
 
