@@ -217,3 +217,35 @@
 
 </body>
 </html>
+
+<script>
+  document.getElementById("loginForm").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const username =
+      document.getElementById("username").value.trim();
+
+    const password =
+      document.getElementById("password").value;
+
+    // Use changed password if available, otherwise default to 1234
+    const savedPassword =
+      localStorage.getItem("hanawalPassword") || "1234";
+
+    if (username === "admin" && password === savedPassword) {
+
+      localStorage.setItem("loggedIn", "true");
+
+      alert("Login successful!");
+
+      window.location.href = "dashboard.html";
+
+    } else {
+
+      document.getElementById("errorMessage").style.display = "block";
+
+    }
+
+  });
+</script>
