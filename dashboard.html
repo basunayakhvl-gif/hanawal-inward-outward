@@ -76,6 +76,16 @@
       font-weight: bold;
     }
 
+    .success {
+      display: none;
+      margin-bottom: 18px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
     .cards {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -107,6 +117,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 15px;
+      margin-bottom: 25px;
     }
 
     .menu a {
@@ -145,6 +156,87 @@
 
     .reports {
       color: #00838f;
+    }
+
+    /* Change Password */
+
+    .password-section {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      margin-bottom: 25px;
+    }
+
+    .password-section h2 {
+      color: #333;
+      font-size: 19px;
+      margin-bottom: 18px;
+    }
+
+    .password-form {
+      max-width: 500px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      color: #444;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #2e7d32;
+    }
+
+    .change-btn {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #2e7d32;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .change-btn:hover {
+      background: #1b5e20;
+    }
+
+    .password-message {
+      display: none;
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .password-error {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .password-success {
+      background: #e8f5e9;
+      color: #2e7d32;
     }
 
     footer {
@@ -237,25 +329,96 @@
 
   </div>
 
+  <!-- CHANGE PASSWORD -->
+
+  <section class="password-section">
+
+    <h2>🔐 Change Password</h2>
+
+    <form id="passwordForm" class="password-form">
+
+      <div class="form-group">
+        <label for="currentPassword">
+          Current Password
+        </label>
+
+        <input
+          type="password"
+          id="currentPassword"
+          placeholder="Enter current password"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="newPassword">
+          New Password
+        </label>
+
+        <input
+          type="password"
+          id="newPassword"
+          placeholder="Enter new password"
+          required
+          minlength="4"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">
+          Confirm New Password
+        </label>
+
+        <input
+          type="password"
+          id="confirmPassword"
+          placeholder="Confirm new password"
+          required
+          minlength="4"
+        >
+      </div>
+
+      <button type="submit" class="change-btn">
+        🔐 Change Password
+      </button>
+
+      <div
+        id="passwordMessage"
+        class="password-message"
+      ></div>
+
+    </form>
+
+  </section>
+
 </main>
 
 <footer>
   Hanawal Gram Panchayat © 2026
 </footer>
 
+
 <script>
+
+/* LOGIN CHECK */
 
 if (localStorage.getItem("loggedIn") !== "true") {
   window.location.href = "index.html";
 }
 
+
+/* LOGOUT */
+
 function logout() {
+
   localStorage.removeItem("loggedIn");
+
   window.location.href = "index.html";
 }
 
 
 /* SUPABASE */
+
 const SUPABASE_URL =
   "https://hmexumitktsxswcqdeef.supabase.co";
 
@@ -263,9 +426,12 @@ const SUPABASE_ANON_KEY =
   "sb_publishable_qk0lBCqQdotYhp-E0l-J-Q_CGNqF_r9";
 
 
+/* LOAD DASHBOARD */
+
 async function loadDashboard() {
 
-  const status = document.getElementById("status");
+  const status =
+    document.getElementById("status");
 
   try {
 
@@ -274,16 +440,19 @@ async function loadDashboard() {
       "/rest/v1/register_records?select=type,date",
       {
         method: "GET",
+
         headers: {
           "apikey": SUPABASE_ANON_KEY,
-          "Authorization": "Bearer " + SUPABASE_ANON_KEY
+          "Authorization":
+            "Bearer " + SUPABASE_ANON_KEY
         }
       }
     );
 
     if (!response.ok) {
 
-      const errorText = await response.text();
+      const errorText =
+        await response.text();
 
       throw new Error(
         "Supabase GET " +
@@ -293,23 +462,30 @@ async function loadDashboard() {
       );
     }
 
-    const records = await response.json();
+    const records =
+      await response.json();
 
     const today =
-      new Date().toISOString().split("T")[0];
+      new Date()
+        .toISOString()
+        .split("T")[0];
 
     let totalInward = 0;
     let totalOutward = 0;
     let todayInward = 0;
     let todayOutward = 0;
 
+
     records.forEach(record => {
 
       const type =
-        String(record.type || "").toLowerCase();
+        String(record.type || "")
+          .toLowerCase();
 
       const recordDate =
-        String(record.date || "").substring(0, 10);
+        String(record.date || "")
+          .substring(0, 10);
+
 
       if (type === "inward") {
 
@@ -320,6 +496,7 @@ async function loadDashboard() {
         }
 
       }
+
 
       if (type === "outward") {
 
@@ -334,31 +511,179 @@ async function loadDashboard() {
     });
 
 
-    document.getElementById("totalInward").textContent =
-      totalInward;
+    document.getElementById(
+      "totalInward"
+    ).textContent = totalInward;
 
-    document.getElementById("totalOutward").textContent =
-      totalOutward;
 
-    document.getElementById("todayInward").textContent =
-      todayInward;
+    document.getElementById(
+      "totalOutward"
+    ).textContent = totalOutward;
 
-    document.getElementById("todayOutward").textContent =
-      todayOutward;
+
+    document.getElementById(
+      "todayInward"
+    ).textContent = todayInward;
+
+
+    document.getElementById(
+      "todayOutward"
+    ).textContent = todayOutward;
 
   }
 
   catch (error) {
 
-    console.error("Dashboard error:", error);
+    console.error(
+      "Dashboard error:",
+      error
+    );
 
     status.textContent =
-      "Dashboard data load failed: " + error.message;
+      "Dashboard data load failed: " +
+      error.message;
 
-    status.style.display = "block";
+    status.style.display =
+      "block";
   }
 }
 
+
+/* CHANGE PASSWORD */
+
+document
+  .getElementById("passwordForm")
+  .addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+
+      const currentPassword =
+        document.getElementById(
+          "currentPassword"
+        ).value;
+
+
+      const newPassword =
+        document.getElementById(
+          "newPassword"
+        ).value;
+
+
+      const confirmPassword =
+        document.getElementById(
+          "confirmPassword"
+        ).value;
+
+
+      const message =
+        document.getElementById(
+          "passwordMessage"
+        );
+
+
+      /*
+        First password is the old password.
+        If no changed password exists,
+        the original password is 1234.
+      */
+
+      const savedPassword =
+        localStorage.getItem(
+          "hanawalPassword"
+        ) || "1234";
+
+
+      message.style.display =
+        "block";
+
+
+      if (
+        currentPassword !==
+        savedPassword
+      ) {
+
+        message.className =
+          "password-message password-error";
+
+        message.textContent =
+          "❌ Current password is incorrect.";
+
+        return;
+      }
+
+
+      if (newPassword.length < 4) {
+
+        message.className =
+          "password-message password-error";
+
+        message.textContent =
+          "❌ New password must contain at least 4 characters.";
+
+        return;
+      }
+
+
+      if (
+        newPassword !==
+        confirmPassword
+      ) {
+
+        message.className =
+          "password-message password-error";
+
+        message.textContent =
+          "❌ New passwords do not match.";
+
+        return;
+      }
+
+
+      if (
+        newPassword ===
+        currentPassword
+      ) {
+
+        message.className =
+          "password-message password-error";
+
+        message.textContent =
+          "❌ New password must be different.";
+
+        return;
+      }
+
+
+      /*
+        Save only the password.
+        No Supabase data is changed.
+      */
+
+      localStorage.setItem(
+        "hanawalPassword",
+        newPassword
+      );
+
+
+      message.className =
+        "password-message password-success";
+
+      message.textContent =
+        "✅ Password changed successfully.";
+
+
+      document
+        .getElementById("passwordForm")
+        .reset();
+
+    }
+  );
+
+
+/* START DASHBOARD */
 
 loadDashboard();
 
